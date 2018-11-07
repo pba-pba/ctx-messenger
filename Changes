@@ -1,0 +1,30 @@
+<Input
+  onChangeText={val => this.setState({ message: val })}
+  onSubmit={this.sendMessage}
+  value={this.state.message}
+  placeholder="Write message"
+  style={{
+    backgroundColor: '#ECEFF1',
+    minHeight: 30,
+    borderRadius: 15,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    borderWidth: 0,
+  }}
+/>
+
+vyhodil som `underlineColorAndroid` a `multiline`
+
+Platform specific props navrhujem poslat cez dedikovany prop, napr. `inputProps`. Taktiez posielat iba props, kt. su relevantne pre danu platformu.
+Ak treba, komponenty mozeme stale composovat, a zaobalovat takto konfiguracie komponentov
+
+- Input => TextInput
+- MessageInput => Input => TextInput
+
+```
+<Input ....... inputProps={{multiline: true, underlineColorAndroid:"transparent"}} />
+
+function Input(props) {
+  return <TextInput {...props.inputProps} ... />
+}
+```

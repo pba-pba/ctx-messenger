@@ -5,11 +5,20 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "ctx-messenger": "link:../",
+    "date-fns": "^1.29.0",
+    "immutability-helper": "^2.8.1",
+    "normalizr": "^3.3.0",
     "prop-types": "^15.6.2",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.6.1",
+    "react-art": "^16.6.1",
+    "react-dom": "^16.6.1",
+    "react-inverted-scrollview": "^1.0.7",
+    "react-native-web": "^0.9.6",
+    "react-primitives": "^0.7.0",
+    "react-redux": "^5.1.0",
     "react-scripts": "^1.1.4",
-    "ctx-messenger": "link:.."
+    "redux": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

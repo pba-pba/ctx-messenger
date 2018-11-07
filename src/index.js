@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// @flow
 
-import styles from './styles.css'
+export { MessengerCore } from './MessengerCore';
+export { Avatar } from './Components/Avatar';
+export { ConversationDetail } from './Components/conversation-detail';
+export { ConversationsList } from './Components/conversation-list';
+export { Loader } from './Components/Loader';
+export { MessageBubble } from './Components/MessageBubble';
+export { MessageEditor } from './Components/MessageEditor';
+// TODO remove and use SubscriberInternal
+export { Subscriber } from './Subscriber';
+export { UserAutocompleteManager } from './Components/UserAutocompleteManager';
 
-export default class ExampleComponent extends Component {
-  static propTypes = {
-    text: PropTypes.string
-  }
+// Store and actions
+export { store, actions } from './store';
 
-  render() {
-    const {
-      text
-    } = this.props
-
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
-}
+export type {
+  ChatMessageType,
+  ChatMessage,
+  ChatUser,
+  ChatState,
+} from './types';
