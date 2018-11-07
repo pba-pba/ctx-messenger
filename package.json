@@ -23,7 +23,6 @@
     "date-fns": "^1.29.0",
     "immutability-helper": "^2.8.1",
     "normalizr": "^3.3.0",
-    "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
     "react-art": "^16.6.0",
     "react-dom": "^15.0.0 || ^16.0.0",
