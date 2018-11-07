@@ -1,59 +1,47 @@
 // @flow
 
 import { denormalize } from 'normalizr';
-import compare_desc from 'date-fns/compare_desc';
 import { ConversationSchema, DetailSchema } from './schemas';
-import { type StoreState } from './types';
+import { type State } from './reducer';
 import { type ConversationState } from '../types';
 
 export const select = {
-  connected(state: StoreState) {
+  connected(state: State) {
     return state.connected;
   },
 
-  draft(state: StoreState) {
+  draft(state: State) {
     return state.draft;
   },
 
-  activeConversationId(state: StoreState): void | string {
+  activeConversationId(state: State): void | string {
     return state.activeConversationId;
   },
 
-  conversations: (state: StoreState) => {
-    return (
-      denormalize(state.conversations, [ConversationSchema], state.entities) ||
-      []
-    ).sort((a, b) =>
-      compare_desc(a.last_message.timestamp, b.last_message.timestamp)
-    );
+  conversations: (state: State) => {
+    return denormalize(state.conversations, [ConversationSchema], state.entities);
   },
 
-  conversationSlim: (
-    state: StoreState,
-    params: { conversation_id: string }
-  ) => {
-    const conversations = select.conversations(state);
+  conversationSlim: (state: State, params: { conversation_id: string }) => {
+    const conversations = select.conversations(state) || [];
     return conversations.find(conv => conv.id === params.conversation_id);
   },
 
   conversationDetail(
-    state: StoreState,
-    params: { conversation_id: void | string }
+    state: State,
+    params: { conversation_id: void | string },
   ): void | ConversationState {
-    if (
-      params.conversation_id &&
-      state.entities.details[params.conversation_id]
-    ) {
+    if (params.conversation_id && state.entities.details[params.conversation_id]) {
       return denormalize(params.conversation_id, DetailSchema, state.entities);
     }
     return undefined;
   },
 
-  searchedUsers(state: StoreState) {
+  searchedUsers(state: State) {
     return state.usersInSearch;
   },
 
-  viewer(state: StoreState) {
+  viewer(state: State) {
     return state.viewer;
   },
 };

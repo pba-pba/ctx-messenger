@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Messenger } from './messenger';
 
 export default class App extends Component {
+  state = {
+    activeConversationId: 'p58urX',
+  };
+
   render() {
     return (
       <div
@@ -10,13 +14,15 @@ export default class App extends Component {
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          background: 'red',
         }}
       >
         <Messenger
           socketUrl="wss://messaging-staging.poweredbyaction.org/cable"
-          accessToken="a975c6e98e479b5f8660f0f2b4c73876cceb20d72f62c6b507066de2754a62ea"
-          activeConversationId="p58urX"
+          accessToken="bd051248a796c5b8fac9a9df25f419881599d4a23a9bc9f5412e33ab6659d06d"
+          activeConversationId={this.state.activeConversationId}
+          onRequestConversationDetail={activeConversationId =>
+            this.setState({ activeConversationId })
+          }
         />
       </div>
     );

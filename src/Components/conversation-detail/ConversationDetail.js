@@ -13,26 +13,25 @@ import {
   requestMessagesBatch,
 } from '../../ConnectionManager/messages';
 import { MessageList } from './MessageList';
+import type { MessageBatchRequest } from '../../types';
 
 type Props = {
   activeConversationId: *,
+};
+
+type CP = {
   conversationDetail: *,
   viewer: *,
   subscribeToUpdates(): mixed,
   unsubscribeFromUpdates(): mixed,
+  requestMessages(MessageBatchRequest): mixed,
 };
 
 type State = {};
 
-class Renderer extends React.Component<Props, State> {
+class Renderer extends React.Component<Props & CP, State> {
   componentDidMount() {
     this.props.subscribeToUpdates();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.activeConversationId !== this.props.activeConversationId) {
-      this.props.subscribeToUpdates();
-    }
   }
 
   componentWillUnmount() {
@@ -84,8 +83,10 @@ const mapDispatch = (dispatch: Dispatch<*>, props) => ({
     dispatchSocketMessage(createSubToConversation(props.activeConversationId)),
   unsubscribeFromUpdates: () =>
     dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
-  requestMessages: request =>
-    dispatchSocketMessage(requestMessagesBatch(request)),
+  requestMessages: request => dispatchSocketMessage(requestMessagesBatch(request)),
 });
 
-export const ConversationDetail = connect(mapState, mapDispatch)(Renderer);
+export const ConversationDetail = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);

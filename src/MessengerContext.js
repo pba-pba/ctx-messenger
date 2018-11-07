@@ -15,12 +15,7 @@ function MessagesScrollView(props: any) {
   return <Text>`MessagesScrollView` component not defined</Text>;
 }
 
-function ListNoContent(props: any) {
-  return <Text>`ListNoContent` component not defined</Text>;
-}
-
 export const MessengerContext = React.createContext({
-  socketUrl: '',
   colors: {
     brand: '#FC612D',
     grayText: '#90A4AE',
@@ -30,6 +25,5 @@ export const MessengerContext = React.createContext({
     Input: Input,
     Loader: Loader,
     MessagesScrollView: MessagesScrollView,
-    ListNoContent: ListNoContent,
   },
 });

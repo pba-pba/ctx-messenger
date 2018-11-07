@@ -8,7 +8,6 @@ import { type ChatUser } from './types';
 type CP = {
   connected: boolean,
   viewer: ChatUser,
-  Loader: *,
 };
 
 type Props = {
@@ -24,12 +23,7 @@ class Renderer extends React.Component<Props & CP, State> {
   });
 
   render() {
-    const { Loader } = this.props;
-    return this.props.connected ? (
-      this.props.children(this.getRenderProps())
-    ) : (
-      <Loader />
-    );
+    return this.props.connected ? this.props.children(this.getRenderProps()) : null;
   }
 }
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { ChatConversation, ChatState } from './types';
+import type { ChatConversation, State } from './types';
 
 export type Users = {
   names: Array<string>,
@@ -12,31 +12,35 @@ export type Users = {
 
 export function formatUsers(
   conversation: ChatConversation,
-  state: ChatState,
+  state: State
 ): {
   names: Array<string>,
   name: string,
   sources: Array<{ uri: string }>,
   status: 'online' | 'offline' | null,
 } {
-  const users = conversation.users.filter(user => user.id !== state.self.id).reduce(
-    (acc, user) => {
-      acc.sources.push('https://www.w3schools.com/howto/img_avatar.png');
-      acc.names.push(user.name);
-      acc.ids.push(user.id);
-      return acc;
-    },
-    {
-      ids: [],
-      sources: [],
-      names: [],
-      status: null,
-      name: '',
-    },
-  );
+  const users = conversation.users
+    .filter(user => user.id !== state.self.id)
+    .reduce(
+      (acc, user) => {
+        acc.sources.push('https://www.w3schools.com/howto/img_avatar.png');
+        acc.names.push(user.name);
+        acc.ids.push(user.id);
+        return acc;
+      },
+      {
+        ids: [],
+        sources: [],
+        names: [],
+        status: null,
+        name: '',
+      }
+    );
 
   if (users.names.length === 1) {
-    const contact = state.contacts.find(contact => contact.user.id === users.ids[0]);
+    const contact = state.contacts.find(
+      contact => contact.user.id === users.ids[0]
+    );
     users.name = users.names.join(', ');
     if (contact) {
       users.status = contact.online === true ? 'online' : 'offline';
@@ -55,7 +59,7 @@ export function formatUsers(
   return users;
 }
 
-export function findConversationByUsers(state: ChatState, userIds: Array<string>) {
+export function findConversationByUsers(state: State, userIds: Array<string>) {
   return state.conversations
     .filter(conversation => conversation.users.length === userIds.length)
     .find(conversation => {

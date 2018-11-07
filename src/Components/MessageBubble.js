@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-primitives';
+import { View, Text, StyleSheet } from 'react-primitives';
 import distance_in_words_to_now from 'date-fns/distance_in_words_to_now';
 import { MessengerContext } from '../MessengerContext';
 import { Avatar } from './Avatar';
@@ -19,7 +19,7 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <View style={[styles.row]}>{userRow}</View>
-        <View style={[styles.row, { paddingRight: 34, marginVertical: 5 }]}>
+        <View style={[styles.row, { marginRight: 24, marginVertical: 5 }]}>
           {message}
         </View>
       </React.Fragment>
@@ -34,7 +34,7 @@ export class MessageBubble extends React.Component<Props, State> {
           style={[
             styles.row,
             styles.reverseRow,
-            { paddingRight: 34, marginVertical: 5 },
+            { marginLeft: 24, marginVertical: 5 },
           ]}
         >
           {message}
@@ -75,13 +75,11 @@ export class MessageBubble extends React.Component<Props, State> {
     const message = (
       <MessengerContext.Consumer>
         {context => (
-          <View style={Platform.OS !== 'web' ? styles.border : undefined}>
-            <Text
-              style={[{ color: context.colors.blackText }, styles.messageText]}
-            >
-              {this.props.message.body}
-            </Text>
-          </View>
+          <Text
+            style={[{ color: context.colors.blackText }, styles.messageText]}
+          >
+            {this.props.message.body}
+          </Text>
         )}
       </MessengerContext.Consumer>
     );
@@ -90,7 +88,7 @@ export class MessageBubble extends React.Component<Props, State> {
       <MessengerContext.Consumer>
         {context => (
           <View>
-            {Platform.OS === 'web' && isMe
+            {isMe
               ? this.renderPushedRight(userRow, message)
               : this.renderPushedLeft(userRow, message)}
           </View>
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 'auto',
-    maxWidth: Platform.OS === 'web' ? '80%' : '100%',
+    maxWidth: '80%',
   },
   reverseRow: {
     flexDirection: 'row-reverse',
@@ -127,11 +125,5 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     lineHeight: 18,
-  },
-  border: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EDEFF2',
-    paddingBottom: 10,
   },
 });

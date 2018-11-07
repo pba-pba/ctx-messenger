@@ -10,7 +10,7 @@ export type ChatUser = {
   first_name: string,
   last_name: string,
   profile_photo_url: string,
-  online: boolean,
+  online: true,
 };
 
 export type ChatContact = {
@@ -57,28 +57,14 @@ export type ConversationState = {
   endReached: boolean,
 };
 
-export type ChatState = {
+export type State = {
   activeConversationId: void | string,
   connected: boolean,
   conversations: void | Array<ChatConversationSlim>,
   draft: void | Object,
-  entities: { conversations: {}, users: {} },
+  entities: { conversations: {}, users: {}, details: {} },
   usersInSearch: ChatUser[],
   viewer: void | ChatUser,
-};
-
-export type ChatActions = {
-  cancelSubToAppearanceStatus(): mixed,
-  cancelSubToConversation(id: string): mixed,
-  cancelSubToSubscriptionsChannel(): mixed,
-  createConversation(ids: Array<string>, message: string): mixed,
-  createSubToAppearanceStatus(): mixed,
-  createSubToConversation(id: string): mixed,
-  createSubToSubscriptionsChannel(): mixed,
-  sendChatMessage(chatMessage: ChatMessage): mixed,
-  searchUsersByTerm(term: string): mixed,
-  createSubToUsersChannel(): mixed,
-  cancelSubToUsersChannel(): mixed,
 };
 
 /**
@@ -87,9 +73,14 @@ export type ChatActions = {
 export type ClientAction =
   | { type: 'set_active_conversion', conversation_id: string }
   | { type: 'send_chat_message', message: ChatMessage }
+  | {
+      type: 'create_conversation',
+      payload: { message: ChatMessage, users: string[] },
+    }
   | { type: 'request_next_messages', conversation_id: string }
   | { type: 'request_search_users', term: string }
-  | { type: 'set_draft', draft: Object };
+  | { type: 'set_draft', draft: Object }
+  | { type: 'messenger:unknown-action' };
 
 export type SocketAction =
   | { type: 'welcome' }
@@ -122,11 +113,6 @@ export type SocketAction =
       result: { messages: ChatMessage[], conversation_id: string },
     }
   | { type: 'replace_self_info', user: ChatUser }
-  | {
-      type: 'replace_appearance_status',
-      users: { user: ChatUser, online: boolean }[],
-    }
-  | { type: 'merge_chat_message', message: ChatMessage }
   | { type: 'search_users', result: { term: string, users: ChatUser[] } };
 
 /**

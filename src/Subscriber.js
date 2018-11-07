@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { MessengerContext } from './MessengerContext';
-import { store, type State } from './store';
+import { store } from './store';
 import { ConnectionManager } from './ConnectionManager/ConnectionManager';
 import {
   cancelSubToConversation,
@@ -10,18 +10,16 @@ import {
   cancelSubToAppearanceStatus,
   createSubToAppearanceStatus,
   sendChatMessage,
-
   // Users
   searchUsersByTerm,
   // Conversation
   createConversation,
   requestMessagesBatch,
-  inviteUsersToConversation,
 } from './ConnectionManager/messages';
 import type {
   SocketAction,
   ChatMessage,
-  ChatState,
+  State,
   ChatActions,
   MessageBatchRequest,
 } from './types';
@@ -62,7 +60,9 @@ class SubscriberInternal extends React.Component<Props & CtxProps, State> {
 export const Subscriber = (props: Props) => {
   return (
     <MessengerContext.Consumer>
-      {context => <SubscriberInternal socketUrl={context.socketUrl} {...props} />}
+      {context => (
+        <SubscriberInternal socketUrl={context.socketUrl} {...props} />
+      )}
     </MessengerContext.Consumer>
   );
 };

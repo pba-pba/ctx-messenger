@@ -61,20 +61,6 @@ export function searchUsersByTerm(term: string) {
   };
 }
 
-export function inviteUsersToConversation(userIds: Array<string>, conversation_id: string) {
-  return {
-    command: 'message',
-    identifier: { channel: 'ConversationsChannel', conversation_id: conversation_id },
-    data: {
-      action: 'add_users',
-      payload: {
-        userIds: userIds,
-        conversation_id: conversation_id,
-      },
-    },
-  };
-}
-
 export function sendChatMessage(chatMessage: ChatMessage) {
   return {
     command: 'message',
@@ -101,7 +87,7 @@ export function requestMessagesBatch(request: MessageBatchRequest) {
   };
 }
 
-export function createConversation(userIds: Array<string>, message: string) {
+export function createConversation(userIds: Array<string>, message: ChatMessage) {
   return {
     command: 'message',
     identifier: { channel: 'SubscriptionsChannel' },

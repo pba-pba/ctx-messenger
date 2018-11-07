@@ -5,9 +5,9 @@ import update from 'immutability-helper';
 import { ConversationSchema, DetailSchema } from './schemas';
 import { select } from './select';
 import type { Action } from './actions';
-import type { StoreState } from './types';
+import type { State } from '../types';
 
-const InitialState: StoreState = {
+const InitialState: State = {
   activeConversationId: undefined,
   connected: false,
   conversations: undefined,
@@ -17,7 +17,7 @@ const InitialState: StoreState = {
   viewer: undefined,
 };
 
-export function reducer(state: StoreState = InitialState, action: Action) {
+export function reducer(state: State = InitialState, action: Action) {
   switch (action.type) {
     case 'welcome': {
       return update(state, { connected: { $set: true } });
@@ -78,6 +78,7 @@ export function reducer(state: StoreState = InitialState, action: Action) {
       let detail = select.conversationDetail(state, {
         conversation_id: action.result.conversation_id,
       });
+      // $FlowFixMe
       detail.messages = action.result.messages.concat(detail.messages);
       const { entities } = normalize(detail, DetailSchema);
       return update(state, { entities: { $merge: entities } });

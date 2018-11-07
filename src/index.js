@@ -1,6 +1,7 @@
 // @flow
 
 export { MessengerCore } from './MessengerCore';
+export { MessengerContext } from './MessengerContext';
 export { Avatar } from './Components/Avatar';
 export { ConversationDetail } from './Components/conversation-detail';
 export { ConversationsList } from './Components/conversation-list';
@@ -10,13 +11,7 @@ export { MessageEditor } from './Components/MessageEditor';
 // TODO remove and use SubscriberInternal
 export { Subscriber } from './Subscriber';
 export { UserAutocompleteManager } from './Components/UserAutocompleteManager';
-
 // Store and actions
 export { store, actions } from './store';
 
-export type {
-  ChatMessageType,
-  ChatMessage,
-  ChatUser,
-  ChatState,
-} from './types';
+export type { ChatMessageType, ChatMessage, ChatUser, State } from './types';

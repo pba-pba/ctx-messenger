@@ -25,7 +25,6 @@ class Connection {
   _onSocketMessage = (evt: MessageEvent) => {
     deserializeMessage((evt.data: any))
       .then(message => {
-        console.log('receive', message);
         CFG.onMessageFn(message);
         this.config.onMessage(message);
       })
@@ -53,7 +52,6 @@ class Connection {
   send = (...args: Array<Object>) => {
     if (this.ws.readyState === WebSocket.OPEN) {
       args.forEach(message => {
-        console.log('send', message);
         this.ws.send(serializeMessage(message));
       });
     } else {
@@ -96,10 +94,10 @@ export function dispatchSocketMessage(message: any) {
 }
 
 const CFG = {
-  onMessageFn: () => {},
+  onMessageFn: any => {},
 };
 
-export function onMessage(fn) {
+export function onMessage(fn: Function) {
   CFG.onMessageFn = fn;
 }
 

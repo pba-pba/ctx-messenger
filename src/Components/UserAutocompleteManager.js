@@ -7,11 +7,7 @@ import { type Dispatch } from 'redux';
 import { select } from '../store/select';
 import { ConnectionGate } from '../ConnectionGate';
 import { searchUsersByTerm, setDraft } from '../store/actions';
-import type {
-  ChatConversationSlim,
-  ConversationDraft,
-  ChatUser,
-} from '../types';
+import type { ChatConversationSlim, ConversationDraft, ChatUser } from '../types';
 
 type CP = {
   draft: void | ConversationDraft,
@@ -27,7 +23,20 @@ type Props = {
 };
 
 function Renderer(props: Props & CP) {
-  return <ConnectionGate>{gate => props.children(props)}</ConnectionGate>;
+  return (
+    <ConnectionGate>
+      {gate => {
+        const selectedUsers = (props.draft ? props.draft.users : []).map(user => user.id);
+        let searchedUsers = props.searchedUsers
+          .filter(user => user.id !== props.viewer.id)
+          .filter(user => selectedUsers.includes(user.id) === false);
+        return props.children({
+          ...props,
+          searchedUsers: searchedUsers,
+        });
+      }}
+    </ConnectionGate>
+  );
 }
 
 const mapState = (state, props) => ({
@@ -44,4 +53,7 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   setDraft: draft => dispatch(setDraft(draft)),
 });
 
-export const UserAutocompleteManager = connect(mapState, mapDispatch)(Renderer);
+export const UserAutocompleteManager = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);

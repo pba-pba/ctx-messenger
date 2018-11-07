@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { MessengerContext } from './MessengerContext';
-import { Subscriber } from './Subscriber';
+import { ConnectionManager } from './ConnectionManager/ConnectionManager';
 import { ConnectionGate } from './ConnectionGate';
 import {
   dispatchSocketMessage,
@@ -15,7 +15,10 @@ import {
   cancelSubToSubscriptionsChannel,
   createSubToUsersChannel,
   cancelSubToUsersChannel,
+  createSubToAppearanceStatus,
+  cancelSubToAppearanceStatus,
 } from './ConnectionManager/messages';
+import type { SocketAction } from './types';
 
 type Props = {
   accessToken: string,
@@ -40,11 +43,13 @@ class EventBinder extends React.Component<{}> {
   componentDidMount() {
     dispatchSocketMessage(createSubToSubscriptionsChannel());
     dispatchSocketMessage(createSubToUsersChannel());
+    dispatchSocketMessage(createSubToAppearanceStatus());
   }
 
-  componentWillMount() {
+  componentWillUnmount() {
     dispatchSocketMessage(cancelSubToSubscriptionsChannel());
     dispatchSocketMessage(cancelSubToUsersChannel());
+    dispatchSocketMessage(cancelSubToAppearanceStatus());
   }
 
   render() {
@@ -53,14 +58,24 @@ class EventBinder extends React.Component<{}> {
 }
 
 export class MessengerCore extends React.Component<Props, State> {
+  connectionManager: ConnectionManager;
+
+  constructor(props: Props) {
+    super(props);
+
+    this.connectionManager = new ConnectionManager({
+      socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}`,
+      dispatch: this.dispatch,
+    });
+  }
+
   componentDidMount() {
     onMessage(message => {
       const m = message.message;
       if (m) {
         if (
           m.type === 'merge_conversations' &&
-          m.result.new_conversation_ids.length &&
-          this.props.onConversationsCreated
+          m.result.new_conversation_ids.length
         ) {
           this.props.onConversationsCreated(m.result.new_conversation_ids);
         }
@@ -70,30 +85,28 @@ export class MessengerCore extends React.Component<Props, State> {
 
   componentWillUnmount() {
     onMessage(() => {});
+    this.connectionManager.close();
   }
+
+  dispatch = (action: SocketAction) => {
+    store.dispatch(action);
+  };
 
   render() {
     const { children, accessToken, socketUrl, ...contextValue } = this.props;
-    const { Loader } = this.props.components;
-
-    const socketUrlWithToken = `${socketUrl}?token=${accessToken}`;
     return (
-      <MessengerContext.Provider
-        value={{ ...contextValue, socketUrl: socketUrlWithToken }}
-      >
-        <Provider store={store}>
-          <Subscriber>
-            <ConnectionGate Loader={Loader}>
-              {() => (
-                <React.Fragment>
-                  <EventBinder />
-                  {this.props.children}
-                </React.Fragment>
-              )}
-            </ConnectionGate>
-          </Subscriber>
-        </Provider>
-      </MessengerContext.Provider>
+      <Provider store={store}>
+        <MessengerContext.Provider value={contextValue}>
+          <ConnectionGate>
+            {() => (
+              <React.Fragment>
+                <EventBinder />
+                {this.props.children}
+              </React.Fragment>
+            )}
+          </ConnectionGate>
+        </MessengerContext.Provider>
+      </Provider>
     );
   }
 }

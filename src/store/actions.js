@@ -38,13 +38,10 @@ export function sendMessage(message: string): ClientAction {
     timestamp: new Date().toString(),
   };
 
-  console.log(conversation_id);
-
-  console.log(msg);
-
   if (conversation_id) {
     return {
       type: 'send_chat_message',
+      // $FlowExpectedError
       message: msg,
     };
   }
@@ -59,5 +56,5 @@ export function sendMessage(message: string): ClientAction {
     };
   }
 
-  return { type: 'unknown-action' };
+  return { type: 'messenger:unknown-action' };
 }

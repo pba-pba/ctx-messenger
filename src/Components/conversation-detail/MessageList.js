@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { View, Text, Touchable, StyleSheet, Platform } from 'react-primitives';
+import { View, Text, Touchable, StyleSheet } from 'react-primitives';
 import { MessengerContext } from '../../MessengerContext';
 import { MessageBubble } from '../MessageBubble';
 import type { ChatMessage, ChatUser, ConversationState } from '../../types';
@@ -9,6 +9,7 @@ import type { ChatMessage, ChatUser, ConversationState } from '../../types';
 type Props = {
   conversation: ConversationState,
   viewer: ChatUser,
+  onRequestPreviousMessages: *,
 };
 
 type State = {};
@@ -40,30 +41,42 @@ export class MessageList extends React.Component<Props, State> {
   render() {
     const { conversation, viewer } = this.props;
     return (
-      <MessengerContext>
+      <MessengerContext.Consumer>
         {context => {
           const { MessagesScrollView } = context.components;
           return (
-            <MessagesScrollView style={{ width: '100%', height: '100%' }}>
-              <View style={{ flexDirection: 'column-reverse' }}>
-                {conversation && viewer
-                  ? conversation.messages.map(this.renderMessage)
-                  : null}
+            <MessagesScrollView
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <View style={styles.container}>
+                {conversation && viewer ? (
+                  <React.Fragment>{conversation.messages.map(this.renderMessage)}</React.Fragment>
+                ) : null}
                 {this.renderPreviousButton()}
               </View>
             </MessagesScrollView>
           );
         }}
-      </MessengerContext>
+      </MessengerContext.Consumer>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flexDirection: 'column-reverse',
+    justifyContent: 'flex-start',
+    minHeight: '100%',
+  },
   bubbleContainer: {
-    paddingTop: Platform.OS === 'web' ? 10 : 3,
-    paddingHorizontal: 10,
-    paddingBottom: Platform.OS === 'web' ? 10 : 0,
+    padding: 10,
   },
 });
