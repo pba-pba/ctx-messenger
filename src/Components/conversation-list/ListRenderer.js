@@ -30,7 +30,7 @@ export class ListRenderer extends React.Component<Props> {
             <Avatar users={users} size={40} />
           </View>
           <View>
-            <Text style={styles.lastMessage}>{names}</Text>
+            <Text style={styles.names}>{names}</Text>
             {message && <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text>}
           </View>
         </View>
