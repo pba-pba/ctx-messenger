@@ -87,6 +87,18 @@ export function requestMessagesBatch(request: MessageBatchRequest) {
   };
 }
 
+export function readChatMessages(conversation_id: string) {
+  return {
+    command: 'message',
+    identifier: { channel: 'ConversationsChannel', conversation_id: conversation_id },
+    action: 'read_messages',
+    payload: {
+      conversation_id: conversation_id,
+    },
+  };
+}
+
+
 export function createConversation(userIds: Array<string>, message: ChatMessage) {
   return {
     command: 'message',
