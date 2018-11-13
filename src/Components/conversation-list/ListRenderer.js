@@ -30,8 +30,8 @@ export class ListRenderer extends React.Component<Props> {
             <Avatar users={users} size={40} />
           </View>
           <View>
-            <Text style={styles.names}>{names}</Text>
-            {message && <Text style={styles.lastMessage}>{message}</Text>}
+            <Text style={styles.lastMessage}>{names}</Text>
+            {message && <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text>}
           </View>
         </View>
       </Touchable>
@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
   lastMessage: {
     fontSize: 14,
     color: '#90A4AE',
+  },
+  unreadLastMessage: {
+    fontWeight: 'bold',
+    color: '#455A64',
   },
   avatar: {
     marginRight: 10,
