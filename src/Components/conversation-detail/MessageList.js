@@ -23,19 +23,10 @@ export class MessageList extends React.Component<Props, State> {
     );
   };
 
-  renderPreviousButton() {
-    return this.props.conversation.endReached ? null : (
-      <Touchable onPress={this.props.onRequestPreviousMessages}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ color: '#ccc' }}>Load Previous Messages</Text>
-        </View>
-      </Touchable>
-    );
+  onScroll = (e) => {
+    if (e.scrollTop === 0) {
+      this.props.onRequestPreviousMessages();
+    }
   }
 
   render() {
@@ -43,7 +34,7 @@ export class MessageList extends React.Component<Props, State> {
     return (
       <MessengerContext.Consumer>
         {context => {
-          const { MessagesScrollView } = context.components;
+          const { MessagesScrollView, Loader } = context.components;
           return (
             <MessagesScrollView
               style={{
@@ -55,12 +46,13 @@ export class MessageList extends React.Component<Props, State> {
                 width: '100%',
                 height: '100%',
               }}
+              onScroll={this.onScroll}
             >
               <View style={styles.container}>
                 {conversation && viewer ? (
                   <React.Fragment>{conversation.messages.map(this.renderMessage)}</React.Fragment>
                 ) : null}
-                {this.renderPreviousButton()}
+                {this.props.conversation.endReached ? null : <Loader />}
               </View>
             </MessagesScrollView>
           );
