@@ -47,6 +47,13 @@ class Renderer extends React.Component<Props & CP, State> {
                   onSubmit={this.sendMessage}
                   value={this.state.message}
                   placeholder="Write message"
+                  style={{ width: '100%' }}
+                  onKeyDown={evt => {
+                    if (evt.key === 'Enter' && evt.shiftKey === false) {
+                      evt.preventDefault();
+                      this.sendMessage();
+                    }
+                  }}
                 />
               </View>
               <Touchable onPress={this.sendMessage}>
