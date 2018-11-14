@@ -91,9 +91,11 @@ export function readChatMessages(conversation_id: string) {
   return {
     command: 'message',
     identifier: { channel: 'ConversationsChannel', conversation_id: conversation_id },
-    action: 'read_messages',
-    payload: {
-      conversation_id: conversation_id,
+    data: {
+      action: 'read_messages',
+      payload: {
+        conversation_id: conversation_id,
+      },
     },
   };
 }

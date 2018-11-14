@@ -11,7 +11,6 @@ import {
   createSubToConversation,
   cancelSubToConversation,
   requestMessagesBatch,
-  readChatMessages,
 } from '../../ConnectionManager/messages';
 import { MessageList } from './MessageList';
 import type { MessageBatchRequest } from '../../types';
@@ -47,10 +46,6 @@ class Renderer extends React.Component<Props & CP, State> {
       limit: detail.limit,
     });
   };
-
-  componentDidUpdate = () => {
-    this.props.readMessages();
-  }
 
   render() {
     if (this.props.activeConversationId === undefined) {
@@ -89,7 +84,6 @@ const mapDispatch = (dispatch: Dispatch<*>, props) => ({
   unsubscribeFromUpdates: () =>
     dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
   requestMessages: request => dispatchSocketMessage(requestMessagesBatch(request)),
-  readMessages: () => dispatchSocketMessage(readChatMessages(props.activeConversationId)),
 });
 
 export const ConversationDetail = connect(
