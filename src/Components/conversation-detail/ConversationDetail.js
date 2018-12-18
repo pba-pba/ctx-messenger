@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
+import { Platform } from 'react-primitives';
 
 import { select } from '../../store';
 import { MessengerContext } from '../../MessengerContext';
@@ -32,6 +33,16 @@ type State = {};
 class Renderer extends React.Component<Props & CP, State> {
   componentDidMount() {
     this.props.subscribeToUpdates();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (Platform.OS === 'web') {
+      return;
+    }
+
+    if (prevProps.activeConversationId !== this.props.activeConversationId) {
+      this.props.subscribeToUpdates();
+    }
   }
 
   componentWillUnmount() {

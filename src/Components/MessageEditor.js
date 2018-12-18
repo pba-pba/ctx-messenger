@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
-import { View, Text, Touchable, StyleSheet } from 'react-primitives';
+import { View, Text, Touchable, StyleSheet, Platform } from 'react-primitives';
 
 import { select } from '../store';
 import { sendMessage } from '../store/actions';
@@ -47,7 +47,11 @@ class Renderer extends React.Component<Props & CP, State> {
                   onSubmit={this.sendMessage}
                   value={this.state.message}
                   placeholder="Write message"
-                  style={{ width: '100%' }}
+                  style={
+                    Platform.OS === 'web'
+                      ? styles.inputWeb
+                      : styles.inputMobile
+                  }
                   onKeyDown={evt => {
                     if (evt.key === 'Enter' && evt.shiftKey === false) {
                       evt.preventDefault();
@@ -78,26 +82,45 @@ class Renderer extends React.Component<Props & CP, State> {
 }
 
 const mapState = (state, props) => ({
-  activeConversationId: select.activeConversationId(state),
+  activeConversationId: select.activeConversationId(state)
 });
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps: Props) => ({
   sendMessage: (message: string) => {
     dispatch(sendMessage(message));
-  },
+  }
 });
 
-export const MessageEditor = connect(
-  mapState,
-  mapDispatch,
-)(Renderer);
+export const MessageEditor = connect(mapState, mapDispatch)(Renderer);
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'white',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: -2 },
+        shadowColor: 'rgba(117,120,128,0.15)',
+        shadowOpacity: 1,
+        shadowRadius: 10,
+      },
+      android: {
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderColor: 'rgba(117,120,128,0.5)',
+      },
+    }),
   },
   buttonWrapper: {
-    padding: 10,
+    padding: 10
   },
+  inputMobile: {
+    backgroundColor: '#ECEFF1',
+    minHeight: 30,
+    borderRadius: 15,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    borderWidth: 0,
+  },
+  inputWeb: { width: '100%' }
 });

@@ -12,6 +12,6 @@ export { MessageEditor } from './Components/MessageEditor';
 export { Subscriber } from './Subscriber';
 export { UserAutocompleteManager } from './Components/UserAutocompleteManager';
 // Store and actions
-export { store, actions } from './store';
+export { store, actions, select } from './store';
 
 export type { ChatMessageType, ChatMessage, ChatUser, State } from './types';

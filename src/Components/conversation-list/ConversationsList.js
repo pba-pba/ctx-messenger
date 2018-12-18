@@ -15,12 +15,12 @@ type Props = {|
   conversations: *,
   onRequestConversationDetail: *,
   viewer: *,
+  value?: string,
 |};
 
 class Renderer extends React.Component<Props> {
-
   componentDidUpdate = () => {
-    const conversations = this.props.conversations || [];
+    const conversations = this.props.conversations;
     const activeConversationDetail = conversations.find(conv => conv.id === this.props.activeConversationId);
 
     if (activeConversationDetail && !activeConversationDetail.read) {
@@ -32,14 +32,20 @@ class Renderer extends React.Component<Props> {
     return (
       <MessengerContext.Consumer>
         {context => {
-          const { Loader } = context.components;
+          const { Loader, ListNoContent } = context.components;
           return this.props.conversations && this.props.viewer ? (
-            <ListRenderer
-              activeConversationId={this.props.activeConversationId}
-              conversations={this.props.conversations}
-              onRequestConversationDetail={this.props.onRequestConversationDetail}
-              viewer={this.props.viewer}
-            />
+            this.props.conversations.length ? (
+              <ListRenderer
+                activeConversationId={this.props.activeConversationId}
+                conversations={this.props.conversations}
+                onRequestConversationDetail={
+                  this.props.onRequestConversationDetail
+                }
+                viewer={this.props.viewer}
+              />
+            ) : (
+              <ListNoContent />
+            )
           ) : (
             <Loader />
           );
@@ -50,7 +56,12 @@ class Renderer extends React.Component<Props> {
 }
 
 const mapState = (state, props) => ({
-  conversations: select.conversations(state),
+  conversations: select.conversations(state).filter(
+    conversation =>
+      conversation.title
+        .toLowerCase()
+        .indexOf((props.value || '').toLowerCase()) !== -1
+  ),
   viewer: select.viewer(state),
 });
 

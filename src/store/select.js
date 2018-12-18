@@ -19,7 +19,7 @@ export const select = {
   },
 
   conversations: (state: State) => {
-    return denormalize(state.conversations, [ConversationSchema], state.entities);
+    return denormalize(state.conversations, [ConversationSchema], state.entities) || [];
   },
 
   conversationSlim: (state: State, params: { conversation_id: string }) => {

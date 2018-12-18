@@ -15,6 +15,14 @@ function MessagesScrollView(props: any) {
   return <Text>`MessagesScrollView` component not defined</Text>;
 }
 
+function MessagesEndList(props: any) {
+  return <Text>`MessagesEndList` component not defined</Text>;
+}
+
+function ListNoContent(props: any) {
+  return <Text>`ListNoContent` component not defined</Text>;
+}
+
 export const MessengerContext = React.createContext({
   colors: {
     brand: '#FC612D',
@@ -25,5 +33,7 @@ export const MessengerContext = React.createContext({
     Input: Input,
     Loader: Loader,
     MessagesScrollView: MessagesScrollView,
+    MessagesEndList: MessagesEndList,
+    ListNoContent: ListNoContent,
   },
 });

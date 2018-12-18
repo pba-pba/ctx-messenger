@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react';
+import { Platform } from 'react-primitives';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { MessengerContext } from './MessengerContext';
@@ -10,6 +11,7 @@ import {
   dispatchSocketMessage,
   onMessage,
 } from './ConnectionManager/Connection';
+import { EventBinder } from './EventBinder';
 import {
   createSubToSubscriptionsChannel,
   cancelSubToSubscriptionsChannel,
@@ -18,13 +20,14 @@ import {
   createSubToAppearanceStatus,
   cancelSubToAppearanceStatus,
 } from './ConnectionManager/messages';
-import type { SocketAction } from './types';
+import type { SocketAction, ChatMessage } from './types';
 
 type Props = {
   accessToken: string,
   children: React.Node,
   socketUrl: string,
-  onConversationsCreated(string[]): mixed,
+  onConversationsCreated?: (ids: string[]) => mixed,
+  onMessageCreated?: (messages: ChatMessage[]) => mixed,
   colors: {
     brand: *,
     grayText: *,
@@ -34,28 +37,12 @@ type Props = {
     Input: *,
     Loader: *,
     MessagesScrollView: *,
+    MessagesEndList: *,
+    ListNoContent: *,
   },
 };
 
 type State = {};
-
-class EventBinder extends React.Component<{}> {
-  componentDidMount() {
-    dispatchSocketMessage(createSubToSubscriptionsChannel());
-    dispatchSocketMessage(createSubToUsersChannel());
-    dispatchSocketMessage(createSubToAppearanceStatus());
-  }
-
-  componentWillUnmount() {
-    dispatchSocketMessage(cancelSubToSubscriptionsChannel());
-    dispatchSocketMessage(cancelSubToUsersChannel());
-    dispatchSocketMessage(cancelSubToAppearanceStatus());
-  }
-
-  render() {
-    return null;
-  }
-}
 
 export class MessengerCore extends React.Component<Props, State> {
   connectionManager: ConnectionManager;
@@ -65,7 +52,7 @@ export class MessengerCore extends React.Component<Props, State> {
 
     this.connectionManager = new ConnectionManager({
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}`,
-      dispatch: this.dispatch,
+      dispatch: this.dispatch
     });
   }
 
@@ -73,11 +60,21 @@ export class MessengerCore extends React.Component<Props, State> {
     onMessage(message => {
       const m = message.message;
       if (m) {
-        if (
-          m.type === 'merge_conversations' &&
-          m.result.new_conversation_ids.length
-        ) {
-          this.props.onConversationsCreated(m.result.new_conversation_ids);
+        switch (m.type) {
+          case 'merge_conversations':
+            if (
+              m.result.new_conversation_ids.length &&
+              this.props.onConversationsCreated
+            ) {
+              this.props.onConversationsCreated(m.result.new_conversation_ids);
+            }
+            break
+          case 'unshift_messages':
+            if (m.result.messages.length && this.props.onMessageCreated) {
+              this.props.onMessageCreated(m.result.messages);
+            }
+            break
+          default:
         }
       }
     });
@@ -100,7 +97,22 @@ export class MessengerCore extends React.Component<Props, State> {
           <ConnectionGate>
             {() => (
               <React.Fragment>
-                <EventBinder />
+                <EventBinder
+                  didMount={() => {
+                    dispatchSocketMessage(createSubToSubscriptionsChannel());
+                    dispatchSocketMessage(createSubToUsersChannel());
+                    if (Platform.OS === 'web') {
+                      dispatchSocketMessage(createSubToAppearanceStatus());
+                    }
+                  }}
+                  willUnmount={() => {
+                    if (Platform.OS === 'web') {
+                      dispatchSocketMessage(cancelSubToSubscriptionsChannel());
+                      dispatchSocketMessage(cancelSubToUsersChannel());
+                      dispatchSocketMessage(cancelSubToAppearanceStatus());
+                    }
+                  }}
+                />
                 {this.props.children}
               </React.Fragment>
             )}
