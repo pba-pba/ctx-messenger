@@ -4,6 +4,9 @@ import * as React from 'react';
 import { View, Text, Touchable, StyleSheet } from 'react-primitives';
 import { Avatar } from '../Avatar';
 import type { ChatUser, ChatConversationSlim } from '../../types';
+import format from 'date-fns/format';
+import is_today from 'date-fns/is_today';
+import is_yesterday from 'date-fns/is_yesterday';
 
 type Props = {|
   activeConversationId: void | string,
@@ -11,6 +14,14 @@ type Props = {|
   onRequestConversationDetail(string): mixed,
   viewer: ChatUser,
 |};
+
+function formatDay(time:string) {
+  if (is_yesterday(time)) {
+    return 'Yesterday';
+  }
+
+  return format(time, 'D/M/YYYY');
+}
 
 export class ListRenderer extends React.Component<Props> {
   renderItem = (item: *) => {
@@ -29,9 +40,13 @@ export class ListRenderer extends React.Component<Props> {
           <View style={styles.avatar}>
             <Avatar users={users} size={40} />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.names}>{names}</Text>
             {message && <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text>}
+          </View>
+          <View>
+            {is_today(item.last_message.timestamp) ? null : <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>}
+            <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
           </View>
         </View>
       </Touchable>
@@ -72,4 +87,10 @@ const styles = StyleSheet.create({
   avatar: {
     marginRight: 10,
   },
+  time: {
+    color: '#90A4AE',
+    fontSize: 11,
+    lineHeight: 15,
+    textAlign: 'right',
+  }
 });
