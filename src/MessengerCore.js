@@ -26,6 +26,7 @@ type Props = {
   accessToken: string,
   children: React.Node,
   socketUrl: string,
+  appConfig: string,
   onConversationsCreated?: (ids: string[]) => mixed,
   onMessageCreated?: (messages: ChatMessage[]) => mixed,
   colors: {
@@ -50,8 +51,10 @@ export class MessengerCore extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const config = this.props.appConfig || 'default';
+
     this.connectionManager = new ConnectionManager({
-      socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}`,
+      socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
       dispatch: this.dispatch
     });
   }
