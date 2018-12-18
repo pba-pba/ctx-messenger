@@ -1,5 +1,7 @@
 // @flow
 
+import 'babel-polyfill';
+
 export { MessengerCore } from './MessengerCore';
 export { MessengerContext } from './MessengerContext';
 export { Avatar } from './Components/Avatar';
