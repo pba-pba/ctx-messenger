@@ -23,6 +23,14 @@ function ListNoContent(props: any) {
   return <Text>`ListNoContent` component not defined</Text>;
 }
 
+function AttachmentIcon(props: any) {
+  return <Text>`AttachmentIcon` component not defined</Text>;
+}
+
+function WhiteboardIcon(props: any) {
+  return <Text>`WhiteboardIcon` component not defined</Text>;
+}
+
 export const MessengerContext = React.createContext({
   colors: {
     brand: '#FC612D',
@@ -36,4 +44,16 @@ export const MessengerContext = React.createContext({
     MessagesEndList: MessagesEndList,
     ListNoContent: ListNoContent,
   },
+  icons: {
+    AttachmentIcon: AttachmentIcon,
+    WhiteboardIcon: WhiteboardIcon,
+  },
+  functions: {
+    openAttachmentPicker() {
+      console.log('open attachment picker')
+    },
+    openWhiteboard() {
+      console.log('open whiteboard')
+    }
+  }
 });

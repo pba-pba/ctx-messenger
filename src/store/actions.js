@@ -22,13 +22,13 @@ export function createConversation(): ClientAction {
   return { type: 'set_draft', draft: { users: [], id: undefined } };
 }
 
-export function sendMessage(message: string): ClientAction {
+export function sendMessage(data: { body: string, attachments: Array<string> }): ClientAction {
   const conversation_id = select.activeConversationId(store.getState());
   const draft = select.draft(store.getState());
 
   const msg = {
     message_type: 'text',
-    body: message,
+    ...data,
     // $FlowExpectedError
     user: select.viewer(store.getState()),
     client_message_id: new Date().getTime().toString(),
