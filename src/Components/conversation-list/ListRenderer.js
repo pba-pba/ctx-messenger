@@ -60,17 +60,9 @@ export class ListRenderer extends React.Component<Props> {
     );
   };
 
-  renderMobile = () => {
+  render() {
     return (
       <React.Fragment>
-        {this.groups.length
-          ? <React.Fragment>
-            <Text style={styles.text}>GROUP MESSAGES</Text>
-            <View style={styles.shadowByPlatform}>
-              {this.groups.map(this.renderItem)}
-            </View>
-          </React.Fragment>
-          : null}
         {this.direct.length
           ? <React.Fragment>
             <Text style={styles.text}>DIRECT MESSAGES</Text>
@@ -79,16 +71,16 @@ export class ListRenderer extends React.Component<Props> {
             </View>
           </React.Fragment>
           : null}
+        {this.groups.length
+          ? <React.Fragment>
+            <Text style={styles.text}>GROUP MESSAGES</Text>
+            <View style={styles.shadowByPlatform}>
+              {this.groups.map(this.renderItem)}
+            </View>
+          </React.Fragment>
+          : null}
       </React.Fragment>
     );
-  }
-
-  renderWeb = () => {
-    return this.props.conversations.map(this.renderItem)
-  }
-
-  render() {
-    return Platform.OS === 'web' ? this.renderWeb() : this.renderMobile();
   }
 }
 
