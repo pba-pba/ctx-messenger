@@ -31,6 +31,10 @@ function WhiteboardIcon(props: any) {
   return <Text>`WhiteboardIcon` component not defined</Text>;
 }
 
+function FileComponent(props: any) {
+  return <Text>`FileComponent` component not defined</Text>;
+}
+
 export const MessengerContext = React.createContext({
   colors: {
     brand: '#FC612D',
@@ -43,6 +47,7 @@ export const MessengerContext = React.createContext({
     MessagesScrollView: MessagesScrollView,
     MessagesEndList: MessagesEndList,
     ListNoContent: ListNoContent,
+    Files: FileComponent,
   },
   icons: {
     AttachmentIcon: AttachmentIcon,
@@ -54,6 +59,12 @@ export const MessengerContext = React.createContext({
     },
     openWhiteboard() {
       console.log('open whiteboard')
+    },
+    uploadFile() {
+      console.log('upload attachment')
+    },
+    getAttachment() {
+      console.log('get attachment')
     }
   }
 });

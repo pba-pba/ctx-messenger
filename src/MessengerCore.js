@@ -40,6 +40,7 @@ type Props = {
     MessagesScrollView: *,
     MessagesEndList: *,
     ListNoContent: *,
+    Files: *
   },
 };
 

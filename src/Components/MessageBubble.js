@@ -6,51 +6,18 @@ import distance_in_words_to_now from 'date-fns/distance_in_words_to_now';
 import { MessengerContext } from '../MessengerContext';
 import { Avatar } from './Avatar';
 import type { ChatMessage, ChatUser } from '../types';
+import { MessageAttachments } from './MessageAttachments';
 
 type Props = {
   message: ChatMessage,
   viewer: ChatUser,
 };
 
-type State = {};
+type State = { };
 
 export class MessageBubble extends React.Component<Props, State> {
-  renderPushedRight(userRow, message) {
+  renderUserRow = () => {
     return (
-      <React.Fragment>
-        <View style={[styles.row]}>{userRow}</View>
-        <View style={[styles.row, { marginRight: 24, marginVertical: 5 }]}>
-          {message}
-        </View>
-      </React.Fragment>
-    );
-  }
-
-  renderPushedLeft(userRow, message) {
-    return (
-      <React.Fragment>
-        <View style={[styles.row, styles.reverseRow]}>{userRow}</View>
-        <View
-          style={[
-            styles.row,
-            styles.reverseRow,
-            { marginLeft: 24, marginVertical: 5 },
-          ]}
-        >
-          {message}
-        </View>
-      </React.Fragment>
-    );
-  }
-
-  render() {
-    if (this.props.message.message_type !== 'text') {
-      return null;
-    }
-
-    const isMe = this.props.viewer.id === this.props.message.user.id;
-
-    const userRow = (
       <MessengerContext.Consumer>
         {context => (
           <React.Fragment>
@@ -70,9 +37,11 @@ export class MessageBubble extends React.Component<Props, State> {
           </React.Fragment>
         )}
       </MessengerContext.Consumer>
-    );
+    )
+  };
 
-    const message = (
+  renderMessage = () => {
+    return (
       <MessengerContext.Consumer>
         {context => (
           <Text
@@ -82,15 +51,51 @@ export class MessageBubble extends React.Component<Props, State> {
           </Text>
         )}
       </MessengerContext.Consumer>
+    )
+  };
+
+  renderPushedRight(context) {
+    return (
+      <React.Fragment>
+        <View style={[styles.row]}>{this.renderUserRow()}</View>
+        <View style={[styles.column, { marginRight: 24, marginVertical: 5 }]}>
+          {this.renderMessage()}
+          <MessageAttachments context={context} attachments={this.props.message.attachments} />
+        </View>
+      </React.Fragment>
     );
+  };
+
+  renderPushedLeft(context) {
+    return (
+      <React.Fragment>
+        <View style={[styles.row, styles.reverseRow]}>{this.renderUserRow()}</View>
+        <View
+          style={[
+            styles.column,
+            styles.reverseRow,
+            { marginLeft: 24, marginVertical: 5 },
+          ]}
+        >
+          {this.renderMessage()}
+          <MessageAttachments context={context} attachments={this.props.message.attachments} />
+        </View>
+      </React.Fragment>
+    );
+  };
+
+  render() {
+    if (this.props.message.message_type !== 'text') {
+      return null;
+    }
+
+    const isMe = this.props.viewer.id === this.props.message.user.id;
 
     return (
       <MessengerContext.Consumer>
         {context => (
           <View>
-            {isMe
-              ? this.renderPushedRight(userRow, message)
-              : this.renderPushedLeft(userRow, message)}
+            {isMe ? this.renderPushedRight(context) : this.renderPushedLeftcontext()}
           </View>
         )}
       </MessengerContext.Consumer>
@@ -100,12 +105,17 @@ export class MessageBubble extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   row: {
-    // common
     justifyContent: 'flex-end',
-    // diff
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 'auto',
+    maxWidth: '80%',
+    width: '100%',
+  },
+  column: {
+    alignItems: 'flex-end',
+    marginLeft: 'auto',
+    width: '100%',
     maxWidth: '80%',
   },
   reverseRow: {
