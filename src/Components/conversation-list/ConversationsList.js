@@ -15,7 +15,6 @@ type Props = {|
   conversations: *,
   onRequestConversationDetail: *,
   viewer: *,
-  value?: string,
 |};
 
 class Renderer extends React.Component<Props> {
@@ -56,12 +55,7 @@ class Renderer extends React.Component<Props> {
 }
 
 const mapState = (state, props) => ({
-  conversations: select.conversations(state).filter(
-    conversation =>
-      conversation.title
-        .toLowerCase()
-        .indexOf((props.value || '').toLowerCase()) !== -1
-  ),
+  conversations: select.conversations(state),
   viewer: select.viewer(state),
 });
 

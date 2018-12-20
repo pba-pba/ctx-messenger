@@ -100,7 +100,9 @@ export function readChatMessages(conversation_id: string) {
   };
 }
 
-
+/**
+ * Conversations
+ */
 export function createConversation(userIds: Array<string>, message: ChatMessage) {
   return {
     command: 'message',
@@ -111,6 +113,17 @@ export function createConversation(userIds: Array<string>, message: ChatMessage)
         userIds: userIds,
         message: message,
       },
+    },
+  };
+}
+
+export function searchConversationsByTerm(term: string) {
+  return {
+    command: 'message',
+    identifier: { channel: 'SubscriptionsChannel' },
+    data: {
+      action: 'search_conversations',
+      payload: { term: term },
     },
   };
 }
