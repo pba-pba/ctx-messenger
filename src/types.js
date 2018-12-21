@@ -27,7 +27,7 @@ export type ChatMessage = {
   timestamp: string,
   user: ChatUser,
   client_message_id: string,
-  message_type: 'text',
+  message_type: 'text' | 'call_start' | 'call_end',
 };
 
 export type MessageBatchRequest = {

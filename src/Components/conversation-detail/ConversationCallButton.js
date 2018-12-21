@@ -39,7 +39,12 @@ class Renderer extends React.Component<Props> {
   }
 
   onPress = () => {
-    this.props.onPress(this.props.sendMessage, this.props.conversation.users)
+    this.props.onPress((data) => {
+      this.props.sendMessage({
+        message_type: 'call_start',
+        ...data,
+      })
+    }, this.props.conversation.users)
   }
 
   render() {

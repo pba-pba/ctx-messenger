@@ -18,6 +18,7 @@ import type { MessageBatchRequest } from '../../types';
 
 type Props = {
   activeConversationId: *,
+  onMessagePress(message: *): mixed,
 };
 
 type CP = {
@@ -72,6 +73,7 @@ class Renderer extends React.Component<Props & CP, State> {
               conversation={this.props.conversationDetail}
               viewer={this.props.viewer}
               onRequestPreviousMessages={this.onRequestPreviousMessages}
+              onMessagePress={this.props.onMessagePress}
             />
           ) : (
             <Loader />
