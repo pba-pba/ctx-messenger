@@ -37,7 +37,7 @@ export function sendMessage(data: { body: string, attachments: Array<string> }):
     user: select.viewer(store.getState()),
     client_message_id: new Date().getTime().toString(),
     // $FlowExpectedError
-    conversation_id: select.activeConversationId(store.getState()),
+    conversation_id: conversation_id,
     id: '',
     timestamp: new Date().toString(),
   };

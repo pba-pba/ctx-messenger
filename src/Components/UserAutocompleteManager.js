@@ -8,6 +8,7 @@ import { select } from '../store/select';
 import { ConnectionGate } from '../ConnectionGate';
 import { searchUsersByTerm, setDraft } from '../store/actions';
 import { EventBinder } from '../EventBinder';
+import { DispacherManager } from './DispacherManager';
 import type {
   ChatConversationSlim,
   ConversationDraft,
@@ -29,8 +30,8 @@ type Props = {
 
 function Renderer(props: Props & CP) {
   return (
-    <ConnectionGate>
-      {gate => {
+    <DispacherManager>
+      {({ searchUsersByTerm, setDraft }) => {
         const selectedUsers = (props.draft ? props.draft.users : []).map(
           user => user.id
         );
@@ -40,16 +41,17 @@ function Renderer(props: Props & CP) {
         return (
           <React.Fragment>
             <EventBinder
-              didMount={() => { props.searchUsersByTerm(''); }}
+              didMount={() => { searchUsersByTerm(''); }}
             />
             {props.children({
-              ...props,
+              searchUsersByTerm: searchUsersByTerm,
+              setDraft: setDraft,
               searchedUsers: searchedUsers,
             })}
           </React.Fragment>
         );
       }}
-    </ConnectionGate>
+    </DispacherManager>
   );
 }
 
@@ -62,9 +64,4 @@ const mapState = (state, props) => ({
   viewer: select.viewer(state),
 });
 
-const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
-  searchUsersByTerm: term => dispatch(searchUsersByTerm(term)),
-  setDraft: draft => dispatch(setDraft(draft)),
-});
-
-export const UserAutocompleteManager = connect(mapState, mapDispatch)(Renderer);
+export const UserAutocompleteManager = connect(mapState)(Renderer);

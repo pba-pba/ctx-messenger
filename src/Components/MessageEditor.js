@@ -9,9 +9,7 @@ import { select } from '../store';
 import { sendMessage } from '../store/actions';
 import { MessengerContext } from '../MessengerContext';
 
-type Props = {
-  activeConversationId: void | string,
-};
+type Props = {};
 
 type CP = {
   sendMessage: *,
@@ -223,9 +221,7 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 }
 
-const mapState = (state, props) => ({
-  activeConversationId: select.activeConversationId(state)
-});
+const mapState = (state) => ({});
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps: Props) => ({
   sendMessage: (data:*) => {

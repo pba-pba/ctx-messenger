@@ -5,7 +5,7 @@ import 'babel-polyfill';
 export { MessengerCore } from './MessengerCore';
 export { MessengerContext } from './MessengerContext';
 export { Avatar } from './Components/Avatar';
-export { ConversationDetail } from './Components/conversation-detail';
+export { ConversationDetail, ConversationCallButton } from './Components/conversation-detail';
 export { ConversationsList } from './Components/conversation-list';
 export { Loader } from './Components/Loader';
 export { MessageBubble } from './Components/MessageBubble';
