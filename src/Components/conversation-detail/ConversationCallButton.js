@@ -19,7 +19,15 @@ type Props = {
   unsubscribeFromUpdates(): mixed,
 };
 
-class Renderer extends React.Component<Props> {
+type State = {
+  loading: boolean
+}
+
+class Renderer extends React.Component<Props,State> {
+  state = {
+    loading: false
+  }
+
   componentDidMount() {
     this.props.subscribeToUpdates();
   }
@@ -38,13 +46,15 @@ class Renderer extends React.Component<Props> {
     this.props.unsubscribeFromUpdates();
   }
 
-  onPress = () => {
-    this.props.onPress((data) => {
+  onPress = async () => {
+    this.setState({loading:true})
+    await this.props.onPress((data) => {
       this.props.sendMessage({
         message_type: 'call_start',
         ...data,
       })
     }, this.props.conversation.users)
+    this.setState({loading:false})
   }
 
   render() {
@@ -52,10 +62,11 @@ class Renderer extends React.Component<Props> {
       <MessengerContext.Consumer>
         {context => {
           const { CallIcon } = context.icons
+          const { Loader } = context.components
           return (
             <Touchable onPress={this.onPress} >
               <View style={styles.touchableItem}>
-                <CallIcon />
+                {this.state.loading ? <Loader /> : <CallIcon />}
               </View>
             </Touchable>
           )

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
 
 import { ConnectionGate } from '../ConnectionGate';
-import { searchConversationsByTerm, searchUsersByTerm, setDraft, sendMessage } from '../store/actions';
+import { searchConversationsByTerm, searchUsersByTerm, setDraft, sendMessage, createConversation} from '../store/actions';
 
 type CP = {
   searchConversationsByTerm(term: string): mixed,
@@ -33,6 +33,7 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   searchUsersByTerm: term => dispatch(searchUsersByTerm(term)),
   setDraft: draft => dispatch(setDraft(draft)),
   sendMessage: data => dispatch(sendMessage(data)),
+  createConversation: data => dispatch(createConversation(data)),
 });
 
 export const DispacherManager = connect(mapState, mapDispatch)(Renderer);

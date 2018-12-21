@@ -19,8 +19,7 @@ type Props = {|
 
 class Renderer extends React.Component<Props> {
   componentDidUpdate = () => {
-    const conversations = this.props.conversations;
-    const activeConversationDetail = conversations.find(conv => conv.id === this.props.activeConversationId);
+    const activeConversationDetail = this.props.conversations.find(conv => conv.id === this.props.activeConversationId);
 
     if (activeConversationDetail && !activeConversationDetail.read) {
       this.props.readMessages();

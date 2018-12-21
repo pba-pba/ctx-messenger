@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { View, StyleSheet, Platform } from 'react-primitives';
+import { View, Platform } from 'react-primitives';
 import { MessengerContext } from '../../MessengerContext';
 import { MessageBubble } from '../MessageBubble';
 import { MessageCall } from '../MessageCall';
@@ -85,7 +85,7 @@ export class MessageList extends React.Component<Props, State> {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   }
-});
+};

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
+import { Platform } from 'react-primitives';
 
 import { select } from '../store/select';
 import { ConnectionGate } from '../ConnectionGate';
@@ -31,7 +32,7 @@ type Props = {
 function Renderer(props: Props & CP) {
   return (
     <DispacherManager>
-      {({ searchUsersByTerm, setDraft }) => {
+      {({ searchUsersByTerm, ...dispatches }) => {
         const selectedUsers = (props.draft ? props.draft.users : []).map(
           user => user.id
         );
@@ -41,11 +42,18 @@ function Renderer(props: Props & CP) {
         return (
           <React.Fragment>
             <EventBinder
-              didMount={() => { searchUsersByTerm(''); }}
+              didMount={() => {
+                if (Platform.OS === 'web') {
+
+                } else {
+                  searchUsersByTerm('');
+                }
+              }}
             />
             {props.children({
+              ...props,
+              ...dispatches,
               searchUsersByTerm: searchUsersByTerm,
-              setDraft: setDraft,
               searchedUsers: searchedUsers,
             })}
           </React.Fragment>

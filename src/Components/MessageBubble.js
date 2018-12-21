@@ -95,7 +95,7 @@ export class MessageBubble extends React.Component<Props, State> {
       <MessengerContext.Consumer>
         {context => (
           <View>
-            {isMe ? this.renderPushedRight(context) : this.renderPushedLeftcontext()}
+            {isMe ? this.renderPushedRight(context) : this.renderPushedLeft(context)}
           </View>
         )}
       </MessengerContext.Consumer>

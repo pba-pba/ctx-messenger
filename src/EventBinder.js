@@ -4,7 +4,7 @@ import * as React from 'react';
 
 type Props = {
   didMount?: Function,
-  willMount?: Function
+  willUnmount?: Function
 };
 
 export class EventBinder extends React.Component<Props> {
@@ -15,8 +15,8 @@ export class EventBinder extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    if (typeof this.props.willMount === 'function') {
-      this.props.willMount();
+    if (typeof this.props.willUnmount === 'function') {
+      this.props.willUnmount();
     }
   }
 

@@ -63,30 +63,29 @@ export class MessengerCore extends React.Component<Props, State> {
   componentDidMount() {
     onMessage(message => {
       const m = message.message;
-      if (m) {
-        switch (m.type) {
-          case 'merge_conversations':
-            if (
-              m.result.new_conversation_ids.length &&
-              this.props.onConversationsCreated
-            ) {
-              this.props.onConversationsCreated(m.result.new_conversation_ids);
-            }
-            break
-          case 'unshift_messages':
-            if (m.result.messages.length && this.props.onMessageCreated) {
-              this.props.onMessageCreated(m.result.messages);
-            }
-            break
-          default:
-        }
+      if (!m) { return; }
+
+      switch (m.type) {
+        case 'merge_conversations':
+          if (
+            m.result.new_conversation_ids.length &&
+            this.props.onConversationsCreated
+          ) {
+            this.props.onConversationsCreated(m.result.new_conversation_ids);
+          }
+          break
+        case 'unshift_messages':
+          if (m.result.messages.length && this.props.onMessageCreated) {
+            this.props.onMessageCreated(m.result.messages);
+          }
+          break
+        default:
       }
     });
   }
 
   componentWillUnmount() {
     onMessage(() => {});
-    this.connectionManager.close();
   }
 
   dispatch = (action: SocketAction) => {
