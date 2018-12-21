@@ -47,6 +47,12 @@ export const socketMessageDispatcher = (store: *) => (next: *) => (action: Actio
       return next(action);
     }
 
+    // Search conversations
+    case 'request_search_conversations': {
+      dispatchSocketMessage(ws.searchConversationsByTerm(action.term));
+      return next(action);
+    }
+
     default:
       return next(action);
   }
