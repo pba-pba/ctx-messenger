@@ -32,14 +32,27 @@ export class ListRenderer extends React.Component<Props> {
     return this.props.conversations.filter(conversation => conversation.users.length === 2);
   };
 
+  message = (item: *) => {
+    if (!item.last_message) {
+      return null;
+    }
+
+    switch (item.last_message.message_type) {
+      case 'text':
+        return item.last_message.body;
+      case 'call_start':
+        return 'Called you';
+      case 'call_end':
+        return 'Call ended';
+      default:
+        return null;
+    }
+  }
+
   renderItem = (item: *) => {
     const users = item.users.filter(user => user.id !== this.props.viewer.id);
     const names = users.length > 1 ? users.map(user => user.first_name).join(', ') : users[0].name;
-    const message = item.last_message
-      ? item.last_message.message_type === 'text'
-        ? item.last_message.body
-        : null
-      : null;
+    const message = this.message(item)
 
     return (
       <Touchable key={item.id} onPress={() => this.props.onRequestConversationDetail(item.id)}>
