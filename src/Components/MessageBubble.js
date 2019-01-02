@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-primitives';
-import distance_in_words_to_now from 'date-fns/distance_in_words_to_now';
+import format from 'date-fns/format';
+import is_today from 'date-fns/is_today';
 import { MessengerContext } from '../MessengerContext';
 import { Avatar } from './Avatar';
 import type { ChatMessage, ChatUser } from '../types';
 import { MessageAttachments } from './MessageAttachments';
+import { formatDay } from './conversation-list/ListRenderer'
 
 type Props = {
   message: ChatMessage,
@@ -21,13 +23,11 @@ export class MessageBubble extends React.Component<Props, State> {
       <MessengerContext.Consumer>
         {context => (
           <React.Fragment>
-            <Text
-              style={[styles.timestamp, { color: context.colors.grayText }]}
-            >
-              {distance_in_words_to_now(this.props.message.timestamp, {
-                addSuffix: true,
-              })}
-            </Text>
+            {is_today(this.props.message.timestamp) ? null
+              : <Text style={[styles.timestamp, { color: context.colors.grayText }]}>
+                {formatDay(this.props.message.timestamp)}
+              </Text>
+            }
 
             <Text style={[styles.name, { color: context.colors.blackText }]}>
               {this.props.message.user.name}

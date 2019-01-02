@@ -15,7 +15,7 @@ type Props = {|
   viewer: ChatUser,
 |};
 
-function formatDay(time:string) {
+export function formatDay(time:string) {
   if (is_yesterday(time)) {
     return 'Yesterday';
   }
