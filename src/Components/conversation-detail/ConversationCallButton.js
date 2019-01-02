@@ -20,13 +20,13 @@ type Props = {
 };
 
 type State = {
-  loading: boolean
-}
+  loading: boolean,
+};
 
-class Renderer extends React.Component<Props,State> {
+class Renderer extends React.Component<Props, State> {
   state = {
-    loading: false
-  }
+    loading: false,
+  };
 
   componentDidMount() {
     this.props.subscribeToUpdates();
@@ -47,29 +47,29 @@ class Renderer extends React.Component<Props,State> {
   }
 
   onPress = async () => {
-    this.setState({loading:true})
-    await this.props.onPress((data) => {
+    this.setState({ loading: true });
+    await this.props.onPress(data => {
       this.props.sendMessage({
         message_type: 'call_start',
         ...data,
-      })
-    }, this.props.conversation.users)
-    this.setState({loading:false})
-  }
+      });
+    }, this.props.conversation.users);
+    this.setState({ loading: false });
+  };
 
   render() {
     return this.props.conversation && this.props.viewer ? (
       <MessengerContext.Consumer>
         {context => {
-          const { CallIcon } = context.icons
-          const { Loader } = context.components
+          const { CallIcon } = context.icons;
+          const { Loader } = context.components;
           return (
-            <Touchable onPress={this.onPress} >
+            <Touchable onPress={this.onPress}>
               <View style={styles.touchableItem}>
                 {this.state.loading ? <Loader /> : <CallIcon />}
               </View>
             </Touchable>
-          )
+          );
         }}
       </MessengerContext.Consumer>
     ) : null;
@@ -88,10 +88,13 @@ const mapDispatch = (dispatch: Dispatch<*>, props) => ({
     dispatchSocketMessage(createSubToConversation(props.activeConversationId)),
   unsubscribeFromUpdates: () =>
     dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
-  sendMessage: (data:*) => dispatch(actions.sendMessage(data)),
+  sendMessage: (data: *) => dispatch(actions.sendMessage(data)),
 });
 
-export const ConversationCallButton = connect(mapState, mapDispatch)(Renderer);
+export const ConversationCallButton = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);
 
 const styles = {
   touchableItem: {

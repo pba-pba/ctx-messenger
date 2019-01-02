@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
 
 import { ConnectionGate } from '../ConnectionGate';
-import { searchConversationsByTerm, searchUsersByTerm, setDraft, sendMessage, createConversation} from '../store/actions';
+import {
+  searchConversationsByTerm,
+  searchUsersByTerm,
+  setDraft,
+  sendMessage,
+  createConversation,
+} from '../store/actions';
 
 type CP = {
   searchConversationsByTerm(term: string): mixed,
@@ -19,11 +25,7 @@ type Props = {
 };
 
 function Renderer(props: Props & CP) {
-  return (
-    <ConnectionGate>
-      {gate => props.children(props)}
-    </ConnectionGate>
-  );
+  return <ConnectionGate>{gate => props.children(props)}</ConnectionGate>;
 }
 
 const mapState = (state, props) => ({});
@@ -36,4 +38,7 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   createConversation: data => dispatch(createConversation(data)),
 });
 
-export const DispacherManager = connect(mapState, mapDispatch)(Renderer);
+export const DispacherManager = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);

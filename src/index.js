@@ -13,7 +13,7 @@ export { MessageEditor } from './Components/MessageEditor';
 // TODO remove and use SubscriberInternal
 export { Subscriber } from './Subscriber';
 export { UserAutocompleteManager } from './Components/UserAutocompleteManager';
-export { DispacherManager } from './Components/DispacherManager'
+export { DispacherManager } from './Components/DispacherManager';
 // Store and actions
 export { store, actions, select } from './store';
 

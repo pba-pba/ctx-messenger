@@ -55,16 +55,16 @@ export const MessengerContext = React.createContext({
   },
   functions: {
     openAttachmentPicker() {
-      console.log('open attachment picker')
+      console.log('open attachment picker');
     },
     openWhiteboard() {
-      console.log('open whiteboard')
+      console.log('open whiteboard');
     },
     uploadFile() {
-      console.log('upload attachment')
+      console.log('upload attachment');
     },
     getAttachment() {
-      console.log('get attachment')
-    }
-  }
+      console.log('get attachment');
+    },
+  },
 });

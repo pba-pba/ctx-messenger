@@ -39,12 +39,9 @@ export function reducer(state: State = InitialState, action: Action) {
     }
 
     case 'merge_conversations': {
-      const { result, entities } = normalize(action.result.conversations, [
-        ConversationSchema,
-      ]);
+      const { result, entities } = normalize(action.result.conversations, [ConversationSchema]);
       return update(state, {
-        conversations: (slice = []) =>
-          Array.from(new Set([...slice, ...result])),
+        conversations: (slice = []) => Array.from(new Set([...result, ...slice])),
         entities: {
           conversations: { $merge: entities.conversations || {} },
           users: { $merge: entities.users || {} },
@@ -69,7 +66,7 @@ export function reducer(state: State = InitialState, action: Action) {
           messages: partialResult.messages,
           endReached: action.result.messages.length < action.result.limit,
         },
-        DetailSchema
+        DetailSchema,
       );
       return update(state, { entities: { $merge: entities } });
     }

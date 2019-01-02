@@ -15,7 +15,7 @@ type Props = {|
   viewer: ChatUser,
 |};
 
-export function formatDay(time:string) {
+export function formatDay(time: string) {
   if (is_yesterday(time)) {
     return 'Yesterday';
   }
@@ -26,11 +26,11 @@ export function formatDay(time:string) {
 export class ListRenderer extends React.Component<Props> {
   get groups() {
     return this.props.conversations.filter(conversation => conversation.users.length > 2);
-  };
+  }
 
   get direct() {
     return this.props.conversations.filter(conversation => conversation.users.length === 2);
-  };
+  }
 
   message = (item: *) => {
     if (!item.last_message) {
@@ -47,12 +47,12 @@ export class ListRenderer extends React.Component<Props> {
       default:
         return null;
     }
-  }
+  };
 
   renderItem = (item: *) => {
     const users = item.users.filter(user => user.id !== this.props.viewer.id);
     const names = users.length > 1 ? users.map(user => user.first_name).join(', ') : users[0].name;
-    const message = this.message(item)
+    const message = this.message(item);
 
     return (
       <Touchable key={item.id} onPress={() => this.props.onRequestConversationDetail(item.id)}>
@@ -62,10 +62,16 @@ export class ListRenderer extends React.Component<Props> {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.names}>{names}</Text>
-            {message && <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text>}
+            {message && (
+              <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>
+                {message}
+              </Text>
+            )}
           </View>
           <View>
-            {is_today(item.last_message.timestamp) ? null : <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>}
+            {is_today(item.last_message.timestamp) ? null : (
+              <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>
+            )}
             <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
           </View>
         </View>
@@ -76,22 +82,18 @@ export class ListRenderer extends React.Component<Props> {
   render() {
     return (
       <React.Fragment>
-        {this.direct.length
-          ? <React.Fragment>
+        {this.direct.length ? (
+          <React.Fragment>
             <Text style={styles.text}>DIRECT MESSAGES</Text>
-            <View style={styles.shadowByPlatform}>
-              {this.direct.map(this.renderItem)}
-            </View>
+            <View style={styles.shadowByPlatform}>{this.direct.map(this.renderItem)}</View>
           </React.Fragment>
-          : null}
-        {this.groups.length
-          ? <React.Fragment>
+        ) : null}
+        {this.groups.length ? (
+          <React.Fragment>
             <Text style={styles.text}>GROUP MESSAGES</Text>
-            <View style={styles.shadowByPlatform}>
-              {this.groups.map(this.renderItem)}
-            </View>
+            <View style={styles.shadowByPlatform}>{this.groups.map(this.renderItem)}</View>
           </React.Fragment>
-          : null}
+        ) : null}
       </React.Fragment>
     );
   }

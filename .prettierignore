@@ -1,0 +1,6 @@
+package.json
+package-lock.json
+yarn.lock
+/src/atoms/icon/assets
+/src/reset.css
+/src/locale

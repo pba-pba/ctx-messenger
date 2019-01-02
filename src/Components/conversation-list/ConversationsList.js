@@ -19,12 +19,14 @@ type Props = {|
 
 class Renderer extends React.Component<Props> {
   componentDidUpdate = () => {
-    const activeConversationDetail = this.props.conversations.find(conv => conv.id === this.props.activeConversationId);
+    const activeConversationDetail = this.props.conversations.find(
+      conv => conv.id === this.props.activeConversationId,
+    );
 
     if (activeConversationDetail && !activeConversationDetail.read) {
       this.props.readMessages();
     }
-  }
+  };
 
   render() {
     return (
@@ -36,9 +38,7 @@ class Renderer extends React.Component<Props> {
               <ListRenderer
                 activeConversationId={this.props.activeConversationId}
                 conversations={this.props.conversations}
-                onRequestConversationDetail={
-                  this.props.onRequestConversationDetail
-                }
+                onRequestConversationDetail={this.props.onRequestConversationDetail}
                 viewer={this.props.viewer}
               />
             ) : (
@@ -62,4 +62,7 @@ const mapDispatch = (dispatch: Dispatch<*>, props) => ({
   readMessages: () => dispatchSocketMessage(readChatMessages(props.activeConversationId)),
 });
 
-export const ConversationsList = connect(mapState, mapDispatch)(Renderer);
+export const ConversationsList = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);

@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "javascript.format.enable": false,
+  "prettier.eslintIntegration": true,
+  "prettier.requireConfig": true,
+  "javascript.validate.enable": false,
+  "flow.enabled": true,
+  "flow.useNPMPackagedFlow": true
+  // "files.associations": {
+  //   "*.js": "javascriptreact"
+  // }
+}

@@ -56,15 +56,13 @@ class Connection {
       });
     } else {
       let messages = args
-        .map(
-          (message, idx) => `\nMessage ${idx + 1}: ${serializeMessage(message)}`
-        )
+        .map((message, idx) => `\nMessage ${idx + 1}: ${serializeMessage(message)}`)
         .join('');
 
       console.error(
         `Trying to send message on socket not open. Connection status code: ${
           this.ws.readyState
-        }. Messages: ${messages}`
+        }. Messages: ${messages}`,
       );
     }
   };
@@ -79,9 +77,7 @@ let connectionCounter = 0;
 
 export function createConnection(config: Config): Connection {
   connectionCounter += 1;
-  connectionSingleton = connectionSingleton
-    ? connectionSingleton
-    : new Connection(config);
+  connectionSingleton = connectionSingleton ? connectionSingleton : new Connection(config);
   return connectionSingleton;
 }
 

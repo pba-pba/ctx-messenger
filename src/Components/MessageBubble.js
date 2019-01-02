@@ -8,14 +8,14 @@ import { MessengerContext } from '../MessengerContext';
 import { Avatar } from './Avatar';
 import type { ChatMessage, ChatUser } from '../types';
 import { MessageAttachments } from './MessageAttachments';
-import { formatDay } from './conversation-list/ListRenderer'
+import { formatDay } from './conversation-list/ListRenderer';
 
 type Props = {
   message: ChatMessage,
   viewer: ChatUser,
 };
 
-type State = { };
+type State = {};
 
 export class MessageBubble extends React.Component<Props, State> {
   renderUserRow = () => {
@@ -23,11 +23,11 @@ export class MessageBubble extends React.Component<Props, State> {
       <MessengerContext.Consumer>
         {context => (
           <React.Fragment>
-            {is_today(this.props.message.timestamp) ? null
-              : <Text style={[styles.timestamp, { color: context.colors.grayText }]}>
+            {is_today(this.props.message.timestamp) ? null : (
+              <Text style={[styles.timestamp, { color: context.colors.grayText }]}>
                 {formatDay(this.props.message.timestamp)}
               </Text>
-            }
+            )}
 
             <Text style={[styles.name, { color: context.colors.blackText }]}>
               {this.props.message.user.name}
@@ -37,21 +37,19 @@ export class MessageBubble extends React.Component<Props, State> {
           </React.Fragment>
         )}
       </MessengerContext.Consumer>
-    )
+    );
   };
 
   renderMessage = () => {
     return (
       <MessengerContext.Consumer>
         {context => (
-          <Text
-            style={[{ color: context.colors.blackText }, styles.messageText]}
-          >
+          <Text style={[{ color: context.colors.blackText }, styles.messageText]}>
             {this.props.message.body}
           </Text>
         )}
       </MessengerContext.Consumer>
-    )
+    );
   };
 
   renderPushedRight(context) {
@@ -64,25 +62,19 @@ export class MessageBubble extends React.Component<Props, State> {
         </View>
       </React.Fragment>
     );
-  };
+  }
 
   renderPushedLeft(context) {
     return (
       <React.Fragment>
         <View style={[styles.row, styles.reverseRow]}>{this.renderUserRow()}</View>
-        <View
-          style={[
-            styles.column,
-            styles.reverseRow,
-            { marginLeft: 24, marginVertical: 5 },
-          ]}
-        >
+        <View style={[styles.column, styles.reverseRow, { marginLeft: 24, marginVertical: 5 }]}>
           {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
         </View>
       </React.Fragment>
     );
-  };
+  }
 
   render() {
     if (this.props.message.message_type !== 'text') {
@@ -94,9 +86,7 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <MessengerContext.Consumer>
         {context => (
-          <View>
-            {isMe ? this.renderPushedRight(context) : this.renderPushedLeft(context)}
-          </View>
+          <View>{isMe ? this.renderPushedRight(context) : this.renderPushedLeft(context)}</View>
         )}
       </MessengerContext.Consumer>
     );

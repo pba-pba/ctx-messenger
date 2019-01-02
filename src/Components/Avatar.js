@@ -59,7 +59,7 @@ export class Avatar extends React.Component<Props, State> {
   render() {
     const { size } = this.props;
     return (
-      <View style={{ width: size, height: size }} >
+      <View style={{ width: size, height: size }}>
         <View
           style={[
             styles.container,
@@ -72,9 +72,7 @@ export class Avatar extends React.Component<Props, State> {
         >
           {this.renderLayout()}
         </View>
-        {this.props.users.length === 1
-          ? renderDot(size, this.props.users[0])
-          : null}
+        {this.props.users.length === 1 ? renderDot(size, this.props.users[0]) : null}
       </View>
     );
   }

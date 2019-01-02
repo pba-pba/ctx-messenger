@@ -34,11 +34,7 @@ function Button(props: ButtonProps) {
   return (
     <Touchable onPress={props.onPress} disabled={props.disabled}>
       <View style={{ paddingHorizontal: 5 }}>
-        {props.active ? (
-          <View
-            style={[styles.dot, { backgroundColor: props.bandColor }]}
-          />
-        ) : null}
+        {props.active ? <View style={[styles.dot, { backgroundColor: props.bandColor }]} /> : null}
         {props.children}
       </View>
     </Touchable>
@@ -55,8 +51,8 @@ class Renderer extends React.Component<Props & CP, State> {
 
   whiteboardManagerMobile = null;
 
-  get isValid () {
-    return this.state.message || this.state.attachments.length
+  get isValid() {
+    return this.state.message || this.state.attachments.length;
   }
 
   sendMessage(context) {
@@ -70,21 +66,21 @@ class Renderer extends React.Component<Props & CP, State> {
       const { attachments } = this.state;
 
       if (this.whiteboardManagerMobile) {
-        const response = await this.getWhiteboardImage(context)
+        const response = await this.getWhiteboardImage(context);
 
         attachments.push(response.data.id);
       }
 
       this.props.sendMessage({
         body: this.state.message,
-        attachments: attachments
+        attachments: attachments,
       });
 
       this.setState({ message: '', attachments: [], submiting: false });
-    }
-  };
+    };
+  }
 
-  getWhiteboardImage = (context) => {
+  getWhiteboardImage = context => {
     return new Promise((resolve, reject) => {
       this.whiteboardManagerMobile.hasContent(async available => {
         if (available) {
@@ -98,9 +94,9 @@ class Renderer extends React.Component<Props & CP, State> {
         }
 
         reject(available);
-      })
-    })
-  }
+      });
+    });
+  };
 
   openAttachmentPicker(openPicker) {
     return async () => {
@@ -111,29 +107,29 @@ class Renderer extends React.Component<Props & CP, State> {
         this.setState(({ attachments }) => {
           attachments.push(response.data.id);
           return { attachments };
-        })
+        });
       }
 
       this.setState({ uploading: false });
-    }
+    };
   }
 
   openWhiteboardMobile(openWhiteboard) {
     return async () => {
       const whiteboard = await openWhiteboard();
       this.whiteboardManagerMobile = whiteboard;
-    }
+    };
   }
 
   openWhiteboardWeb(openWhiteboard) {
     return async () => {
       const response = await openWhiteboard();
 
-      console.log('web', response)
-    }
+      console.log('web', response);
+    };
   }
 
-  renderInput = (context) => {
+  renderInput = context => {
     const { Input } = context.components;
     return (
       <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -142,11 +138,7 @@ class Renderer extends React.Component<Props & CP, State> {
           onSubmit={this.sendMessage(context)}
           value={this.state.message}
           placeholder="Write message"
-          style={
-            Platform.OS === 'web'
-              ? styles.inputWeb
-              : styles.inputMobile
-          }
+          style={Platform.OS === 'web' ? styles.inputWeb : styles.inputMobile}
           onKeyDown={evt => {
             if (evt.key === 'Enter' && evt.shiftKey === false) {
               evt.preventDefault();
@@ -156,63 +148,70 @@ class Renderer extends React.Component<Props & CP, State> {
         />
       </View>
     );
-  }
+  };
 
-  renderSubmitButton = (context) => {
+  renderSubmitButton = context => {
     const { Loader } = context.components;
     const { colors } = context;
     const disabled = !this.isValid || this.state.uploading;
     return (
       <Touchable onPress={this.sendMessage(context)} onLayout={this.onLayout} disabled={disabled}>
         <View style={styles.buttonWrapper}>
-          {this.state.submiting
-            ? <Loader />
-            : <Text
+          {this.state.submiting ? (
+            <Loader />
+          ) : (
+            <Text
               style={[
                 styles.button,
                 { color: colors.brand },
-                disabled ? { opacity: 0.5 } : undefined
+                disabled ? { opacity: 0.5 } : undefined,
               ]}
             >
               Send
             </Text>
-          }
+          )}
         </View>
       </Touchable>
     );
-  }
+  };
 
   render() {
     return (
       <MessengerContext.Consumer>
         {context => {
           const { AttachmentIcon, WhiteboardIcon } = context.icons;
-          const { functions, colors } = context
+          const { functions, colors } = context;
 
           return (
-            <View style={styles.container} >
-              <View style={styles.inputContainer} >
-                <View style={styles.buttons} >
-                  {functions ? <React.Fragment>
-                    {functions.openAttachmentPicker ?
-                      <Button
-                        active={this.state.attachments.length}
-                        bandColor={colors.brand}
-                        onPress={this.openAttachmentPicker(functions.openAttachmentPicker)}
-                      >
-                        <AttachmentIcon />
-                      </Button>
-                    : null}
-                    {functions.openWhiteboard ?
-                      <Button
-                        active={!!this.state.whiteboard}
-                        bandColor={colors.brand}
-                        onPress={Platform.OS === 'web' ? this.openWhiteboardWeb(functions.openWhiteboard) :this.openWhiteboardMobile(functions.openWhiteboard)}
-                      >
-                        <WhiteboardIcon />
-                      </Button>
-                    : null}
-                  </React.Fragment> : null}
+            <View style={styles.container}>
+              <View style={styles.inputContainer}>
+                <View style={styles.buttons}>
+                  {functions ? (
+                    <React.Fragment>
+                      {functions.openAttachmentPicker ? (
+                        <Button
+                          active={this.state.attachments.length}
+                          bandColor={colors.brand}
+                          onPress={this.openAttachmentPicker(functions.openAttachmentPicker)}
+                        >
+                          <AttachmentIcon />
+                        </Button>
+                      ) : null}
+                      {functions.openWhiteboard ? (
+                        <Button
+                          active={!!this.state.whiteboard}
+                          bandColor={colors.brand}
+                          onPress={
+                            Platform.OS === 'web'
+                              ? this.openWhiteboardWeb(functions.openWhiteboard)
+                              : this.openWhiteboardMobile(functions.openWhiteboard)
+                          }
+                        >
+                          <WhiteboardIcon />
+                        </Button>
+                      ) : null}
+                    </React.Fragment>
+                  ) : null}
                   {this.renderInput(context)}
                 </View>
                 {this.renderSubmitButton(context)}
@@ -225,15 +224,18 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 }
 
-const mapState = (state) => ({});
+const mapState = state => ({});
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps: Props) => ({
-  sendMessage: (data:*) => {
+  sendMessage: (data: *) => {
     dispatch(sendMessage(data));
-  }
+  },
 });
 
-export const MessageEditor = connect(mapState, mapDispatch)(Renderer);
+export const MessageEditor = connect(
+  mapState,
+  mapDispatch,
+)(Renderer);
 
 const styles = StyleSheet.create({
   container: {
@@ -289,5 +291,4 @@ const styles = StyleSheet.create({
     top: 0,
     right: 5,
   },
-
 });

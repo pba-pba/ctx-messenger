@@ -10,11 +10,7 @@ import { ConnectionGate } from '../ConnectionGate';
 import { searchUsersByTerm, setDraft } from '../store/actions';
 import { EventBinder } from '../EventBinder';
 import { DispacherManager } from './DispacherManager';
-import type {
-  ChatConversationSlim,
-  ConversationDraft,
-  ChatUser
-} from '../types';
+import type { ChatConversationSlim, ConversationDraft, ChatUser } from '../types';
 
 type CP = {
   draft: void | ConversationDraft,
@@ -33,9 +29,7 @@ function Renderer(props: Props & CP) {
   return (
     <DispacherManager>
       {({ searchUsersByTerm, ...dispatches }) => {
-        const selectedUsers = (props.draft ? props.draft.users : []).map(
-          user => user.id
-        );
+        const selectedUsers = (props.draft ? props.draft.users : []).map(user => user.id);
         let searchedUsers = props.searchedUsers
           .filter(user => user.id !== props.viewer.id)
           .filter(user => selectedUsers.includes(user.id) === false);
@@ -44,7 +38,6 @@ function Renderer(props: Props & CP) {
             <EventBinder
               didMount={() => {
                 if (Platform.OS === 'web') {
-
                 } else {
                   searchUsersByTerm('');
                 }

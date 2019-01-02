@@ -12,7 +12,7 @@ export type Users = {
 
 export function formatUsers(
   conversation: ChatConversation,
-  state: State
+  state: State,
 ): {
   names: Array<string>,
   name: string,
@@ -34,13 +34,11 @@ export function formatUsers(
         names: [],
         status: null,
         name: '',
-      }
+      },
     );
 
   if (users.names.length === 1) {
-    const contact = state.contacts.find(
-      contact => contact.user.id === users.ids[0]
-    );
+    const contact = state.contacts.find(contact => contact.user.id === users.ids[0]);
     users.name = users.names.join(', ');
     if (contact) {
       users.status = contact.online === true ? 'online' : 'offline';

@@ -7,7 +7,4 @@ import type { Action } from './actions';
 import type { State } from '../types';
 
 export type StoreInstance = Store<State, Action>;
-export const store: StoreInstance = createStore(
-  reducer,
-  applyMiddleware(socketMessageDispatcher)
-);
+export const store: StoreInstance = createStore(reducer, applyMiddleware(socketMessageDispatcher));

@@ -7,10 +7,7 @@ import { store } from './store';
 import { MessengerContext } from './MessengerContext';
 import { ConnectionManager } from './ConnectionManager/ConnectionManager';
 import { ConnectionGate } from './ConnectionGate';
-import {
-  dispatchSocketMessage,
-  onMessage,
-} from './ConnectionManager/Connection';
+import { dispatchSocketMessage, onMessage } from './ConnectionManager/Connection';
 import { EventBinder } from './EventBinder';
 import {
   createSubToSubscriptionsChannel,
@@ -40,7 +37,7 @@ type Props = {
     MessagesScrollView: *,
     MessagesEndList: *,
     ListNoContent: *,
-    Files: *
+    Files: *,
   },
 };
 
@@ -56,29 +53,28 @@ export class MessengerCore extends React.Component<Props, State> {
 
     this.connectionManager = new ConnectionManager({
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
-      dispatch: this.dispatch
+      dispatch: this.dispatch,
     });
   }
 
   componentDidMount() {
     onMessage(message => {
       const m = message.message;
-      if (!m) { return; }
+      if (!m) {
+        return;
+      }
 
       switch (m.type) {
         case 'merge_conversations':
-          if (
-            m.result.new_conversation_ids.length &&
-            this.props.onConversationsCreated
-          ) {
+          if (m.result.new_conversation_ids.length && this.props.onConversationsCreated) {
             this.props.onConversationsCreated(m.result.new_conversation_ids);
           }
-          break
+          break;
         case 'unshift_messages':
           if (m.result.messages.length && this.props.onMessageCreated) {
             this.props.onMessageCreated(m.result.messages);
           }
-          break
+          break;
         default:
       }
     });

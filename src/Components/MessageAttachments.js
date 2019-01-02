@@ -4,20 +4,22 @@ import * as React from 'react';
 
 type Props = {
   context: *,
-  attachments: string[]
+  attachments: string[],
 };
 
 type State = {
-  attachments: Array<Object>
+  attachments: Array<Object>,
 };
 
 export class MessageAttachments extends React.Component<Props, State> {
   state = {
-    attachments: []
-  }
+    attachments: [],
+  };
 
   async componentDidMount() {
-    const services = this.props.attachments.map(id => this.props.context.functions.getAttachment(id))
+    const services = this.props.attachments.map(id =>
+      this.props.context.functions.getAttachment(id),
+    );
     const responses = await Promise.all(services);
     const attachments = responses.map(response => response.data);
 
@@ -25,7 +27,7 @@ export class MessageAttachments extends React.Component<Props, State> {
   }
 
   render() {
-    const { Files } = this.props.context.components
+    const { Files } = this.props.context.components;
     return <Files files={this.state.attachments} />;
   }
 }

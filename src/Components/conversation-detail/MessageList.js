@@ -11,7 +11,7 @@ type Props = {
   conversation: ConversationState,
   viewer: ChatUser,
   onRequestPreviousMessages: *,
-  onMessagePress(message: ChatMessage): mixed
+  onMessagePress(message: ChatMessage): mixed,
 };
 
 type State = {};
@@ -20,7 +20,11 @@ export class MessageList extends React.Component<Props, State> {
   renderTextMessage = (message: ChatMessage) => {
     return (
       <View style={styles.bubbleContainer} key={message.id}>
-        <MessageBubble message={message} viewer={this.props.viewer} onPress={this.props.onMessagePress} />
+        <MessageBubble
+          message={message}
+          viewer={this.props.viewer}
+          onPress={this.props.onMessagePress}
+        />
       </View>
     );
   };
@@ -31,9 +35,9 @@ export class MessageList extends React.Component<Props, State> {
         <MessageCall message={message} onPress={this.props.onMessagePress} />
       </View>
     );
-  }
+  };
 
-  renderMessage = (message:ChatMessage) => {
+  renderMessage = (message: ChatMessage) => {
     switch (message.message_type) {
       case 'call_start':
       case 'call_end':
@@ -41,9 +45,9 @@ export class MessageList extends React.Component<Props, State> {
       default:
         return this.renderTextMessage(message);
     }
-  }
+  };
 
-  onScroll = (e) => {
+  onScroll = e => {
     if (this.props.conversation.endReached) {
       return;
     }
@@ -67,13 +71,11 @@ export class MessageList extends React.Component<Props, State> {
               <View
                 style={[
                   styles.container,
-                  Platform.OS === 'web' ? { minHeight: '100%' } : undefined
+                  Platform.OS === 'web' ? { minHeight: '100%' } : undefined,
                 ]}
               >
                 {conversation && viewer ? (
-                  <React.Fragment>
-                    {conversation.messages.map(this.renderMessage)}
-                  </React.Fragment>
+                  <React.Fragment>{conversation.messages.map(this.renderMessage)}</React.Fragment>
                 ) : null}
                 {this.props.conversation.endReached ? <MessagesEndList /> : <Loader />}
               </View>
@@ -101,5 +103,5 @@ const styles = {
     bottom: 0,
     width: '100%',
     height: '100%',
-  }
+  },
 };
