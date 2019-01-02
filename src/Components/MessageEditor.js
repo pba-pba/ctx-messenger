@@ -56,7 +56,7 @@ class Renderer extends React.Component<Props & CP, State> {
   whiteboardManagerMobile = null;
 
   get isValid () {
-    return !this.state.message && this.state.attachments.length === 0
+    return this.state.message || this.state.attachments.length
   }
 
   sendMessage(context) {
