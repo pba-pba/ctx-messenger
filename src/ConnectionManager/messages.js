@@ -120,7 +120,7 @@ export function createConversation(userIds: Array<string>, message: ChatMessage)
 export function searchConversationsByTerm(term: string) {
   return {
     command: 'message',
-    identifier: { channel: 'UsersChannel' },
+    identifier: { channel: 'SubscriptionsChannel' },
     data: {
       action: 'search_conversations',
       payload: { term: term },
