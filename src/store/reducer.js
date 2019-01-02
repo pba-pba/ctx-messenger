@@ -1,11 +1,11 @@
 // @flow
 
-import { normalize } from 'normalizr';
-import update from 'immutability-helper';
-import { ConversationSchema, DetailSchema } from './schemas';
-import { select } from './select';
-import type { Action } from './actions';
-import type { State } from '../types';
+import { normalize } from 'normalizr'
+import update from 'immutability-helper'
+import { ConversationSchema, DetailSchema } from './schemas'
+import { select } from './select'
+import type { Action } from './actions'
+import type { State } from '../types'
 
 const InitialState: State = {
   activeConversationId: undefined,
@@ -14,39 +14,39 @@ const InitialState: State = {
   draft: undefined,
   entities: { conversations: {}, users: {}, messages: {}, details: {} },
   usersInSearch: [],
-  viewer: undefined,
-};
+  viewer: undefined
+}
 
 export function reducer(state: State = InitialState, action: Action) {
   switch (action.type) {
     case 'welcome': {
-      return update(state, { connected: { $set: true } });
+      return update(state, { connected: { $set: true } })
     }
 
     case 'replace_self_info': {
-      return update(state, { viewer: { $set: action.user } });
+      return update(state, { viewer: { $set: action.user } })
     }
 
     case 'confirm_subscription': {
-      const { identifier } = action;
+      const { identifier } = action
       if (identifier.channel === 'ConversationsChannel') {
         return update(state, {
           activeConversationId: { $set: identifier.conversation_id },
-          draft: { $set: undefined },
-        });
+          draft: { $set: undefined }
+        })
       }
-      return state;
+      return state
     }
 
     case 'merge_conversations': {
-      const { result, entities } = normalize(action.result.conversations, [ConversationSchema]);
+      const { result, entities } = normalize(action.result.conversations, [ConversationSchema])
       return update(state, {
         conversations: (slice = []) => Array.from(new Set([...result, ...slice])),
         entities: {
           conversations: { $merge: entities.conversations || {} },
-          users: { $merge: entities.users || {} },
-        },
-      });
+          users: { $merge: entities.users || {} }
+        }
+      })
     }
 
     /**
@@ -54,31 +54,31 @@ export function reducer(state: State = InitialState, action: Action) {
      */
     case 'push_messages': {
       const detail = select.conversationDetail(state, {
-        conversation_id: action.result.conversation_id,
-      });
-      const mutation = action.result.cursor ? '$push' : '$set';
+        conversation_id: action.result.conversation_id
+      })
+      const mutation = action.result.cursor ? '$push' : '$set'
       const partialResult = update(detail || {}, {
-        messages: { [mutation]: action.result.messages },
-      });
+        messages: { [mutation]: action.result.messages }
+      })
       const { entities } = normalize(
         {
           ...action.result,
           messages: partialResult.messages,
-          endReached: action.result.messages.length < action.result.limit,
+          endReached: action.result.messages.length < action.result.limit
         },
-        DetailSchema,
-      );
-      return update(state, { entities: { $merge: entities } });
+        DetailSchema
+      )
+      return update(state, { entities: { $merge: entities } })
     }
 
     case 'unshift_messages': {
       let detail = select.conversationDetail(state, {
-        conversation_id: action.result.conversation_id,
-      });
+        conversation_id: action.result.conversation_id
+      })
       // $FlowFixMe
-      detail.messages = action.result.messages.concat(detail.messages);
-      const { entities } = normalize(detail, DetailSchema);
-      return update(state, { entities: { $merge: entities } });
+      detail.messages = action.result.messages.concat(detail.messages)
+      const { entities } = normalize(detail, DetailSchema)
+      return update(state, { entities: { $merge: entities } })
     }
 
     /**
@@ -87,15 +87,15 @@ export function reducer(state: State = InitialState, action: Action) {
     case 'set_draft': {
       return update(state, {
         activeConversationId: { $set: undefined },
-        draft: { $set: action.draft },
-      });
+        draft: { $set: action.draft }
+      })
     }
 
     case 'search_users': {
-      return update(state, { usersInSearch: { $set: action.result.users } });
+      return update(state, { usersInSearch: { $set: action.result.users } })
     }
 
     default:
-      return state;
+      return state
   }
 }
