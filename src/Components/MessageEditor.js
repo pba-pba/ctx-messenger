@@ -55,10 +55,14 @@ class Renderer extends React.Component<Props & CP, State> {
 
   whiteboardManagerMobile = null;
 
+  get isValid () {
+    return !this.state.message && this.state.attachments.length === 0
+  }
+
   sendMessage(context) {
     return async () => {
-      if (this.state.message.length === 0) {
-        return '';
+      if (!this.isValid) {
+        return;
       }
 
       this.setState({ submiting: true });
@@ -135,7 +139,7 @@ class Renderer extends React.Component<Props & CP, State> {
       <View style={{ flex: 1, paddingHorizontal: 5 }}>
         <Input
           onChangeText={val => this.setState({ message: val })}
-          onSubmit={this.sendMessage}
+          onSubmit={this.sendMessage(context)}
           value={this.state.message}
           placeholder="Write message"
           style={
@@ -146,7 +150,7 @@ class Renderer extends React.Component<Props & CP, State> {
           onKeyDown={evt => {
             if (evt.key === 'Enter' && evt.shiftKey === false) {
               evt.preventDefault();
-              this.sendMessage();
+              this.sendMessage(context);
             }
           }}
         />
@@ -157,7 +161,7 @@ class Renderer extends React.Component<Props & CP, State> {
   renderSubmitButton = (context) => {
     const { Loader } = context.components;
     const { colors } = context;
-    const disabled = !this.state.message || this.state.uploading;
+    const disabled = !this.isValid || this.state.uploading;
     return (
       <Touchable onPress={this.sendMessage(context)} onLayout={this.onLayout} disabled={disabled}>
         <View style={styles.buttonWrapper}>
