@@ -39,7 +39,7 @@ export class ListRenderer extends React.Component<Props> {
 
     switch (item.last_message.message_type) {
       case 'text':
-        return item.last_message.body;
+        return item.last_message.body || 'Attached Files';
       case 'call_start':
         return 'Called you';
       case 'call_end':
@@ -62,11 +62,7 @@ export class ListRenderer extends React.Component<Props> {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.names}>{names}</Text>
-            {message && (
-              <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>
-                {message}
-              </Text>
-            )}
+            {message ? <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text> : null}
           </View>
           <View>
             {is_today(item.last_message.timestamp) ? null : (

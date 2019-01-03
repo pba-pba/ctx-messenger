@@ -98,17 +98,19 @@ class Renderer extends React.Component<Props & CP, State> {
     });
   };
 
-  openAttachmentPicker(openPicker) {
-    return async () => {
+  openAttachmentPicker(cb) {
+    return async (e) => {
       this.setState({ uploading: true });
-      const response = await openPicker();
+      const responses = await cb(e);
 
-      if (response.ok) {
-        this.setState(({ attachments }) => {
-          attachments.push(response.data.id);
-          return { attachments };
-        });
-      }
+      responses.map(response => {
+        if (response.ok) {
+          this.setState(({ attachments }) => {
+            attachments.push(response.data.id);
+            return { attachments };
+          })
+        }
+      });
 
       this.setState({ uploading: false });
     };
@@ -129,7 +131,38 @@ class Renderer extends React.Component<Props & CP, State> {
     };
   }
 
-  renderInput = context => {
+  renderAttachmentPickerWeb(context) {
+    const AttachmentIcon = context.icons.AttachmentIcon;
+    return (
+      <div>
+        <input
+          multiple
+          id='file-attachments'
+          type='file'
+          onChange={this.openAttachmentPicker(context.functions.openAttachmentPicker)}
+          style={{visibility: 'hidden', position: 'fixed', top: 0, left: 0, width: 0, height: 0}}
+        />
+        <label htmlFor='file-attachments' style={{cursor: 'pointer'}}>
+          <AttachmentIcon />
+        </label>
+      </div>
+    );
+  }
+
+  renderAttachmentPickerMobile(context) {
+    const AttachmentIcon = context.icons.AttachmentIcon;
+    return (
+      <Button
+        active={this.state.attachments.length}
+        bandColor={context.colors.brand}
+        onPress={this.openAttachmentPicker(context.functions.openAttachmentPicker)}
+      >
+        <AttachmentIcon />
+      </Button>
+    );
+  }
+
+  renderInput = (context) => {
     const { Input } = context.components;
     return (
       <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -179,39 +212,27 @@ class Renderer extends React.Component<Props & CP, State> {
     return (
       <MessengerContext.Consumer>
         {context => {
-          const { AttachmentIcon, WhiteboardIcon } = context.icons;
+          const { WhiteboardIcon } = context.icons;
           const { functions, colors } = context;
 
           return (
-            <View style={styles.container}>
-              <View style={styles.inputContainer}>
-                <View style={styles.buttons}>
-                  {functions ? (
-                    <React.Fragment>
-                      {functions.openAttachmentPicker ? (
-                        <Button
-                          active={this.state.attachments.length}
-                          bandColor={colors.brand}
-                          onPress={this.openAttachmentPicker(functions.openAttachmentPicker)}
-                        >
-                          <AttachmentIcon />
-                        </Button>
-                      ) : null}
-                      {functions.openWhiteboard ? (
-                        <Button
-                          active={!!this.state.whiteboard}
-                          bandColor={colors.brand}
-                          onPress={
-                            Platform.OS === 'web'
-                              ? this.openWhiteboardWeb(functions.openWhiteboard)
-                              : this.openWhiteboardMobile(functions.openWhiteboard)
-                          }
-                        >
-                          <WhiteboardIcon />
-                        </Button>
-                      ) : null}
-                    </React.Fragment>
-                  ) : null}
+            <View style={styles.container} >
+              <View style={styles.inputContainer} >
+                <View style={styles.buttons} >
+                  {functions ? <React.Fragment>
+                    {functions.openAttachmentPicker ?
+                      Platform.OS === 'web' ? this.renderAttachmentPickerWeb(context) : this.renderAttachmentPickerMobile(context)
+                    : null}
+                    {functions.openWhiteboard ?
+                      <Button
+                        active={!!this.state.whiteboard}
+                        bandColor={colors.brand}
+                        onPress={Platform.OS === 'web' ? this.openWhiteboardWeb(functions.openWhiteboard) : this.openWhiteboardMobile(functions.openWhiteboard)}
+                      >
+                        <WhiteboardIcon />
+                      </Button>
+                    : null}
+                  </React.Fragment> : null}
                   {this.renderInput(context)}
                 </View>
                 {this.renderSubmitButton(context)}
