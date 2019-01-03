@@ -49,6 +49,17 @@ export function reducer(state: State = InitialState, action: Action) {
       });
     }
 
+    case 'replace_conversations': {
+      const { result, entities } = normalize(action.result.conversations, [ConversationSchema]);
+      return update(state, {
+        conversations: { $set: result },
+        entities: {
+          conversations: { $merge: entities.conversations || {} },
+          users: { $merge: entities.users || {} },
+        },
+      });
+    }
+
     /**
      * Messages
      */
