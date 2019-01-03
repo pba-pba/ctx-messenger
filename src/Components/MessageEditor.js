@@ -57,28 +57,35 @@ class Renderer extends React.Component<Props & CP, State> {
 
   sendMessage(context) {
     return async () => {
-      if (!this.isValid) {
-        return;
-      }
-
-      this.setState({ submiting: true });
-
       const { attachments } = this.state;
 
       if (this.whiteboardManagerMobile) {
+        this.setState({ submiting: true });
+
         const response = await this.getWhiteboardImage(context);
 
-        attachments.push(response.data.id);
+        if (response.available !== false) {
+          attachments.push(response.data.id);
 
-        this.whiteboardManagerMobile.clearCanvas();
+          this.whiteboardManagerMobile.clearCanvas();
+          this.whiteboardManagerMobile.clearCanvas();
+          this.whiteboardManagerMobile.clearCanvas();
+          this.whiteboardManagerMobile = null;
+        }
       }
 
-      this.props.sendMessage({
-        body: this.state.message,
-        attachments: attachments,
-      });
+      if (this.state.message || attachments.length) {
+        this.setState({ submiting: true });
 
-      this.setState({ message: '', attachments: [], submiting: false });
+        this.props.sendMessage({
+          body: this.state.message,
+          attachments: attachments,
+        });
+
+        this.setState({ message: '', attachments: [] });
+      }
+
+      this.setState({ submiting: false });
     };
   }
 
@@ -95,13 +102,13 @@ class Renderer extends React.Component<Props & CP, State> {
           resolve(response);
         }
 
-        reject(available);
+        resolve({ available: available });
       });
     });
   };
 
   openAttachmentPicker(cb) {
-    return async (e) => {
+    return async e => {
       this.setState({ uploading: true });
       const responses = await cb(e);
 
@@ -110,7 +117,7 @@ class Renderer extends React.Component<Props & CP, State> {
           this.setState(({ attachments }) => {
             attachments.push(response.data.id);
             return { attachments };
-          })
+          });
         }
       });
 
@@ -139,12 +146,12 @@ class Renderer extends React.Component<Props & CP, State> {
       <div>
         <input
           multiple
-          id='file-attachments'
-          type='file'
+          id="file-attachments"
+          type="file"
           onChange={this.openAttachmentPicker(context.functions.openAttachmentPicker)}
-          style={{visibility: 'hidden', position: 'fixed', top: 0, left: 0, width: 0, height: 0}}
+          style={{ visibility: 'hidden', position: 'fixed', top: 0, left: 0, width: 0, height: 0 }}
         />
-        <label htmlFor='file-attachments' style={{cursor: 'pointer'}}>
+        <label htmlFor="file-attachments" style={{ cursor: 'pointer' }}>
           <AttachmentIcon />
         </label>
       </div>
@@ -164,7 +171,7 @@ class Renderer extends React.Component<Props & CP, State> {
     );
   }
 
-  renderInput = (context) => {
+  renderInput = context => {
     const { Input } = context.components;
     return (
       <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -188,7 +195,7 @@ class Renderer extends React.Component<Props & CP, State> {
   renderSubmitButton = context => {
     const { Loader } = context.components;
     const { colors } = context;
-    const disabled = !this.isValid || this.state.uploading;
+    const disabled = this.state.uploading;
     return (
       <Touchable onPress={this.sendMessage(context)} onLayout={this.onLayout} disabled={disabled}>
         <View style={styles.buttonWrapper}>
@@ -218,23 +225,31 @@ class Renderer extends React.Component<Props & CP, State> {
           const { functions, colors } = context;
 
           return (
-            <View style={styles.container} >
-              <View style={styles.inputContainer} >
-                <View style={styles.buttons} >
-                  {functions ? <React.Fragment>
-                    {functions.openAttachmentPicker ?
-                      Platform.OS === 'web' ? this.renderAttachmentPickerWeb(context) : this.renderAttachmentPickerMobile(context)
-                    : null}
-                    {functions.openWhiteboard ?
-                      <Button
-                        active={!!this.state.whiteboard}
-                        bandColor={colors.brand}
-                        onPress={Platform.OS === 'web' ? this.openWhiteboardWeb(functions.openWhiteboard) : this.openWhiteboardMobile(functions.openWhiteboard)}
-                      >
-                        <WhiteboardIcon />
-                      </Button>
-                    : null}
-                  </React.Fragment> : null}
+            <View style={styles.container}>
+              <View style={styles.inputContainer}>
+                <View style={styles.buttons}>
+                  {functions ? (
+                    <React.Fragment>
+                      {functions.openAttachmentPicker
+                        ? Platform.OS === 'web'
+                          ? this.renderAttachmentPickerWeb(context)
+                          : this.renderAttachmentPickerMobile(context)
+                        : null}
+                      {functions.openWhiteboard ? (
+                        <Button
+                          active={!!this.state.whiteboard}
+                          bandColor={colors.brand}
+                          onPress={
+                            Platform.OS === 'web'
+                              ? this.openWhiteboardWeb(functions.openWhiteboard)
+                              : this.openWhiteboardMobile(functions.openWhiteboard)
+                          }
+                        >
+                          <WhiteboardIcon />
+                        </Button>
+                      ) : null}
+                    </React.Fragment>
+                  ) : null}
                   {this.renderInput(context)}
                 </View>
                 {this.renderSubmitButton(context)}
