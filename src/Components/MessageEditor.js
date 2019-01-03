@@ -69,6 +69,8 @@ class Renderer extends React.Component<Props & CP, State> {
         const response = await this.getWhiteboardImage(context);
 
         attachments.push(response.data.id);
+
+        this.whiteboardManagerMobile.clearCanvas();
       }
 
       this.props.sendMessage({
