@@ -54,8 +54,8 @@ export function reducer(state: State = InitialState, action: Action) {
       return update(state, {
         conversations: { $set: result },
         entities: {
-          conversations: { $merge: entities.conversations || {} },
-          users: { $merge: entities.users || {} },
+          conversations: { $set: entities.conversations || {} },
+          users: { $set: entities.users || {} },
         },
       });
     }
