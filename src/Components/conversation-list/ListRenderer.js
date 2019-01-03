@@ -62,7 +62,14 @@ export class ListRenderer extends React.Component<Props> {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.names}>{names}</Text>
-            {message ? <Text style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}>{message}</Text> : null}
+            {message ? (
+              <Text
+                style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}
+                numberOfLines={1}
+              >
+                {message}
+              </Text>
+            ) : null}
           </View>
           <View>
             {is_today(item.last_message.timestamp) ? null : (
