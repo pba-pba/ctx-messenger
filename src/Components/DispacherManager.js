@@ -11,6 +11,7 @@ import {
   setDraft,
   sendMessage,
   createConversation,
+  clear,
 } from '../store/actions';
 
 type CP = {
@@ -18,6 +19,7 @@ type CP = {
   searchUsersByTerm(term: string): mixed,
   setDraft(draft: any): mixed,
   sendMessage(data: *): mixed,
+  clear(): mixed,
 };
 
 type Props = {
@@ -36,6 +38,7 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   setDraft: draft => dispatch(setDraft(draft)),
   sendMessage: data => dispatch(sendMessage(data)),
   createConversation: data => dispatch(createConversation(data)),
+  clear: () => dispatch(clear()),
 });
 
 export const DispacherManager = connect(

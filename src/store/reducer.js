@@ -19,6 +19,10 @@ const InitialState: State = {
 
 export function reducer(state: State = InitialState, action: Action) {
   switch (action.type) {
+    case 'clear': {
+      return InitialState;
+    }
+
     case 'welcome': {
       return update(state, { connected: { $set: true } });
     }
