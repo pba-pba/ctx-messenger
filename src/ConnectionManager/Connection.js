@@ -43,13 +43,12 @@ class Connection {
    * Public methods
    */
   close = () => {
-    connectionCounter -= 1;
-    if (connectionCounter === 0) {
-      this.ws.close();
-    }
+    this.ws.close();
+    connectionSingleton = null;
   };
 
   send = (...args: Array<Object>) => {
+    console.log('send', args);
     if (this.ws.readyState === WebSocket.OPEN) {
       args.forEach(message => {
         this.ws.send(serializeMessage(message));
@@ -73,11 +72,9 @@ class Connection {
  */
 
 let connectionSingleton: ?Connection = null;
-let connectionCounter = 0;
 
 export function createConnection(config: Config): Connection {
-  connectionCounter += 1;
-  connectionSingleton = connectionSingleton ? connectionSingleton : new Connection(config);
+  connectionSingleton = connectionSingleton || new Connection(config);
   return connectionSingleton;
 }
 
