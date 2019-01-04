@@ -24,6 +24,7 @@ type Props = {
   children: React.Node,
   socketUrl: string,
   appConfig: string,
+  closeOnUnmount: boolean,
   onConversationsCreated?: (ids: string[]) => mixed,
   onMessageCreated?: (messages: ChatMessage[]) => mixed,
   colors: {
@@ -82,6 +83,10 @@ export class MessengerCore extends React.Component<Props, State> {
 
   componentWillUnmount() {
     onMessage(() => {});
+
+    if (this.props.closeOnUnmount) {
+      this.connectionManager.close();
+    }
   }
 
   dispatch = (action: SocketAction) => {

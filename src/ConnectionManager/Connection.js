@@ -43,10 +43,8 @@ class Connection {
    * Public methods
    */
   close = () => {
-    connectionCounter -= 1;
-    if (connectionCounter === 0) {
-      this.ws.close();
-    }
+    this.ws.close();
+    connectionSingleton = null;
   };
 
   send = (...args: Array<Object>) => {
@@ -73,11 +71,9 @@ class Connection {
  */
 
 let connectionSingleton: ?Connection = null;
-let connectionCounter = 0;
 
 export function createConnection(config: Config): Connection {
-  connectionCounter += 1;
-  connectionSingleton = connectionSingleton ? connectionSingleton : new Connection(config);
+  connectionSingleton = connectionSingleton || new Connection(config);
   return connectionSingleton;
 }
 
