@@ -48,7 +48,6 @@ class Connection {
   };
 
   send = (...args: Array<Object>) => {
-    console.log('send', args);
     if (this.ws.readyState === WebSocket.OPEN) {
       args.forEach(message => {
         this.ws.send(serializeMessage(message));
