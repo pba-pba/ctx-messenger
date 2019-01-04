@@ -6,6 +6,10 @@ import type { ClientAction, SocketAction } from '../types';
 
 export type Action = ClientAction | SocketAction;
 
+export function clear() {
+  return { type: 'clear' };
+}
+
 export function setActiveConverstation(conversation_id: string): ClientAction {
   return { type: 'set_active_conversion', conversation_id: conversation_id };
 }
