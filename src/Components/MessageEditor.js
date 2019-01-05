@@ -24,21 +24,31 @@ type State = {
 
 type ButtonProps = {
   active?: boolean,
-  bandColor: string,
+  brandColor: string,
   disabled?: boolean,
   children: React.Node,
-  onPress(): mixed,
+  onPress?: () => mixed,
 };
 
 function Button(props: ButtonProps) {
-  return (
-    <Touchable onPress={props.onPress} disabled={props.disabled}>
+  function renderButton() {
+    return (
       <View style={{ paddingHorizontal: 5 }}>
-        {props.active ? <View style={[styles.dot, { backgroundColor: props.bandColor }]} /> : null}
+        {props.active ? <View style={[styles.dot, { backgroundColor: props.brandColor }]} /> : null}
         {props.children}
       </View>
-    </Touchable>
-  );
+    );
+  }
+
+  if (props.onPress) {
+    return (
+      <Touchable onPress={props.onPress} disabled={props.disabled}>
+        {renderButton()}
+      </Touchable>
+    );
+  }
+
+  return renderButton();
 }
 
 class Renderer extends React.Component<Props & CP, State> {
@@ -152,7 +162,9 @@ class Renderer extends React.Component<Props & CP, State> {
           style={{ visibility: 'hidden', position: 'fixed', top: 0, left: 0, width: 0, height: 0 }}
         />
         <label htmlFor="file-attachments" style={{ cursor: 'pointer' }}>
-          <AttachmentIcon />
+          <Button active={this.state.attachments.length} brandColor={context.colors.brand}>
+            <AttachmentIcon />
+          </Button>
         </label>
       </div>
     );
@@ -163,7 +175,7 @@ class Renderer extends React.Component<Props & CP, State> {
     return (
       <Button
         active={this.state.attachments.length}
-        bandColor={context.colors.brand}
+        brandColor={context.colors.brand}
         onPress={this.openAttachmentPicker(context.functions.openAttachmentPicker)}
       >
         <AttachmentIcon />
@@ -238,7 +250,7 @@ class Renderer extends React.Component<Props & CP, State> {
                       {functions.openWhiteboard ? (
                         <Button
                           active={!!this.state.whiteboard}
-                          bandColor={colors.brand}
+                          brandColor={colors.brand}
                           onPress={
                             Platform.OS === 'web'
                               ? this.openWhiteboardWeb(functions.openWhiteboard)
