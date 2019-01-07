@@ -20,7 +20,7 @@ export function formatDay(time: string) {
     return 'Yesterday';
   }
 
-  return format(time, 'D/M/YYYY');
+  return format(time, 'DD.MM.YYYY');
 }
 
 export class ListRenderer extends React.Component<Props> {
