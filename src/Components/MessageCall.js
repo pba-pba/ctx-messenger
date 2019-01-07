@@ -17,33 +17,38 @@ export class MessageCall extends React.Component<Props, State> {
   render() {
     return (
       <MessengerContext.Consumer>
-        {context => (
-          <Touchable
-            onPress={() => this.props.onPress(this.props.message)}
-            disabled={this.props.message.message_type === 'call_end'}
-          >
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 3,
-                borderColor: context.colors.grayText,
-                padding: 10,
-              }}
+        {context => {
+          const { CallStartIcon, CallEndIcon } = context.icons;
+          return (
+            <Touchable
+              onPress={() => this.props.onPress(this.props.message)}
+              disabled={this.props.message.message_type === 'call_end'}
             >
-              <Text style={[styles.text, { color: context.colors.blackText }]}>
-                {this.props.message.message_type === 'call_start'
-                  ? 'Starting call'
-                  : 'This call has ended'}
-              </Text>
-              <Text style={[styles.timestamp, { color: context.colors.grayText }]}>
-                Started at{' '}
-                {distance_in_words_to_now(this.props.message.timestamp, {
-                  addSuffix: true,
-                })}
-              </Text>
-            </View>
-          </Touchable>
-        )}
+              <View style={[styles.container, { borderColor: context.colors.grayText }]}>
+                <View style={styles.iconWrapper}>
+                  {this.props.message.message_type === 'call_start' ? (
+                    <CallStartIcon />
+                  ) : (
+                    <CallEndIcon />
+                  )}
+                </View>
+                <View>
+                  <Text style={[styles.text, { color: context.colors.blackText }]}>
+                    {this.props.message.message_type === 'call_start'
+                      ? 'Starting call'
+                      : 'This call has ended'}
+                  </Text>
+                  <Text style={[styles.timestamp, { color: context.colors.grayText }]}>
+                    Started at{' '}
+                    {distance_in_words_to_now(this.props.message.timestamp, {
+                      addSuffix: true,
+                    })}
+                  </Text>
+                </View>
+              </View>
+            </Touchable>
+          );
+        }}
       </MessengerContext.Consumer>
     );
   }
@@ -57,5 +62,15 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 11,
     fontWeight: '500',
+  },
+  container: {
+    borderWidth: 1,
+    borderRadius: 3,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconWrapper: {
+    paddingRight: 10,
   },
 });

@@ -35,6 +35,14 @@ function FileComponent(props: any) {
   return <Text>`FileComponent` component not defined</Text>;
 }
 
+function CallStartIcon(props: any) {
+  return <Text>`CallStartIcon` component not defined</Text>;
+}
+
+function CallEndIcon(props: any) {
+  return <Text>`CallEndIcon` component not defined</Text>;
+}
+
 export const MessengerContext = React.createContext({
   colors: {
     brand: '#FC612D',
@@ -52,6 +60,8 @@ export const MessengerContext = React.createContext({
   icons: {
     AttachmentIcon: AttachmentIcon,
     WhiteboardIcon: WhiteboardIcon,
+    CallStartIcon: CallStartIcon,
+    CallEndIcon: CallEndIcon,
   },
   functions: {
     openAttachmentPicker() {
