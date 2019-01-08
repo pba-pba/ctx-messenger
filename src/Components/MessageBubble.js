@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-primitives';
+import { View, Text, StyleSheet, Platform } from 'react-primitives';
 import format from 'date-fns/format';
 import is_today from 'date-fns/is_today';
 import { MessengerContext } from '../MessengerContext';
@@ -47,7 +47,13 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <MessengerContext.Consumer>
         {context => (
-          <Text style={[{ color: context.colors.blackText }, styles.messageText]}>
+          <Text
+            style={[
+              { color: context.colors.blackText },
+              styles.messageText,
+              Platform.OS === 'web' ? { wordBreak: 'break-all' } : undefined,
+            ]}
+          >
             {this.props.message.body}
           </Text>
         )}
@@ -129,7 +135,6 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     lineHeight: 18,
-    wordBreak: 'break-all',
   },
   time: {
     color: '#90A4AE',
