@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     lineHeight: 18,
+    wordBreak: 'break-all',
   },
   time: {
     color: '#90A4AE',
