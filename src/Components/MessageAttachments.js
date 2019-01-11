@@ -47,7 +47,7 @@ export class MessageAttachments extends React.Component<Props, State> {
   };
 
   renderPlaceholders = () => {
-    return this.props.attachments.map(attachment => <AttachmentPlaceholder />);
+    return this.props.attachments.map((attachment, index) => <AttachmentPlaceholder key={index} />);
   };
 
   render() {
