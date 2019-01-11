@@ -41,7 +41,7 @@ class Connection {
   };
 
   _onSocketClose = (evt: Event) => {
-    console.log('websocket close');
+    console.log('websocket close', evt);
   };
 
   /**
