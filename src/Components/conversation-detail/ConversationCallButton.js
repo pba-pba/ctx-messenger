@@ -97,7 +97,5 @@ export const ConversationCallButton = connect(
 )(Renderer);
 
 const styles = {
-  touchableItem: {
-    margin: 10,
-  },
+  touchableItem: {},
 };
