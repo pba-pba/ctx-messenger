@@ -20,6 +20,7 @@ class Connection {
     this.ws = new WebSocket(this.config.socketUrl);
     this.ws.onmessage = this._onSocketMessage;
     this.ws.onerror = this._onSocketError;
+    this.ws.onclose = this._onSocketClose;
   }
 
   _onSocketMessage = (evt: MessageEvent) => {
@@ -37,6 +38,10 @@ class Connection {
 
   _onSocketError = (evt: Event) => {
     console.error(evt);
+  };
+
+  _onSocketClose = (evt: Event) => {
+    console.log('websocket close');
   };
 
   /**
