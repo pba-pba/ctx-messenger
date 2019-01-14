@@ -17,7 +17,7 @@ class Connection {
   constructor(config: Config) {
     this.config = config;
     // Create connection
-    this.ws = new WebSocket(this.config.socketUrl);
+    this.ws = new WebSocket(config.socketUrl);
     this.ws.onmessage = this._onSocketMessage;
     this.ws.onerror = this._onSocketError;
     this.ws.onclose = this._onSocketClose;
@@ -37,11 +37,17 @@ class Connection {
   };
 
   _onSocketError = (evt: Event) => {
-    console.error(evt);
+    switch (evt.readyState) {
+      case evt.CLOSED:
+        this.config.reconnect();
+        break;
+      default:
+        console.error('websocket error', evt);
+    }
   };
 
   _onSocketClose = (evt: Event) => {
-    console.log('websocket close', evt);
+    console.log('websocket close');
   };
 
   /**

@@ -50,13 +50,27 @@ export class MessengerCore extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    this.connect();
+  }
+
+  connect = () => {
     const config = this.props.appConfig || 'default';
 
     this.connectionManager = new ConnectionManager({
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
       dispatch: this.dispatch,
+      reconnect: this.reconnect,
     });
-  }
+  };
+
+  reconnect = () => {
+    if (this.props.onReconnect) {
+      this.connectionManager.close();
+      setTimeout(() => {
+        this.connect();
+      }, 1000);
+    }
+  };
 
   componentDidMount() {
     onMessage(message => {

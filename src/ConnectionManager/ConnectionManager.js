@@ -17,6 +17,7 @@ export class ConnectionManager {
     this.connection = createConnection({
       onMessage: this.onMessage,
       socketUrl: config.socketUrl,
+      reconnect: config.reconnect,
     });
   }
 
