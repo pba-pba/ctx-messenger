@@ -64,12 +64,10 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   reconnect = () => {
-    if (this.props.onReconnect) {
-      this.connectionManager.close();
-      setTimeout(() => {
-        this.connect();
-      }, 1000);
-    }
+    this.connectionManager.close();
+    setTimeout(() => {
+      this.connect();
+    }, 1000);
   };
 
   componentDidMount() {
