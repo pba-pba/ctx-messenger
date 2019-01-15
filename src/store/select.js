@@ -10,6 +10,10 @@ export const select = {
     return state.connected;
   },
 
+  loading(state: State, key: string): boolean {
+    return state.loading[key];
+  },
+
   draft(state: State) {
     return state.draft;
   },

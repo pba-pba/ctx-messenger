@@ -15,12 +15,17 @@ const InitialState: State = {
   entities: { conversations: {}, users: {}, messages: {}, details: {} },
   usersInSearch: [],
   viewer: undefined,
+  loading: { get_messages: false, merge_conversations: false, replace_conversations: false },
 };
 
 export function reducer(state: State = InitialState, action: Action) {
   switch (action.type) {
     case 'clear': {
       return InitialState;
+    }
+
+    case 'loading': {
+      return update(state, { loading: { $merge: action.payload } });
     }
 
     case 'welcome': {
@@ -50,6 +55,7 @@ export function reducer(state: State = InitialState, action: Action) {
           conversations: { $merge: entities.conversations || {} },
           users: { $merge: entities.users || {} },
         },
+        loading: { $merge: { merge_conversations: false } },
       });
     }
 
@@ -61,6 +67,7 @@ export function reducer(state: State = InitialState, action: Action) {
           conversations: { $set: entities.conversations || {} },
           users: { $set: entities.users || {} },
         },
+        loading: { $merge: { replace_conversations: false } },
       });
     }
 
@@ -71,6 +78,7 @@ export function reducer(state: State = InitialState, action: Action) {
       const detail = select.conversationDetail(state, {
         conversation_id: action.result.conversation_id,
       });
+
       const mutation = action.result.cursor ? '$push' : '$set';
       const partialResult = update(detail || {}, {
         messages: { [mutation]: action.result.messages },
@@ -83,7 +91,10 @@ export function reducer(state: State = InitialState, action: Action) {
         },
         DetailSchema,
       );
-      return update(state, { entities: { $merge: entities } });
+      return update(state, {
+        entities: { $merge: entities },
+        loading: { $merge: { get_messages: false } },
+      });
     }
 
     case 'unshift_messages': {

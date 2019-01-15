@@ -15,6 +15,7 @@ type Props = {|
   conversations: *,
   onRequestConversationDetail: *,
   viewer: *,
+  loadingConversations: *,
 |};
 
 class Renderer extends React.Component<Props> {
@@ -34,7 +35,9 @@ class Renderer extends React.Component<Props> {
         {context => {
           const { Loader, ListNoContent } = context.components;
           return this.props.conversations && this.props.viewer ? (
-            this.props.conversations.length ? (
+            this.props.loadingConversations ? (
+              <Loader />
+            ) : this.props.conversations.length ? (
               <ListRenderer
                 activeConversationId={this.props.activeConversationId}
                 conversations={this.props.conversations}
@@ -44,9 +47,7 @@ class Renderer extends React.Component<Props> {
             ) : (
               <ListNoContent />
             )
-          ) : (
-            <Loader />
-          );
+          ) : null;
         }}
       </MessengerContext.Consumer>
     );
@@ -54,6 +55,7 @@ class Renderer extends React.Component<Props> {
 }
 
 const mapState = (state, props) => ({
+  loadingConversations: select.loading(state, 'merge_conversations'),
   conversations: select.conversations(state),
   viewer: select.viewer(state),
 });

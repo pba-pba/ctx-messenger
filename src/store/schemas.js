@@ -16,10 +16,6 @@ export const MessageSchema = new schema.Entity(
 
 export const DetailSchema = new schema.Entity(
   'details',
-  {
-    messages: [MessageSchema],
-  },
-  {
-    idAttribute: 'conversation_id',
-  },
+  { messages: [MessageSchema] },
+  { idAttribute: 'conversation_id' },
 );

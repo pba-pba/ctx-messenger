@@ -8,10 +8,11 @@ import { MessageCall } from '../MessageCall';
 import type { ChatMessage, ChatUser, ConversationState } from '../../types';
 
 type Props = {
+  busy: boolean,
   conversation: ConversationState,
-  viewer: ChatUser,
-  onRequestPreviousMessages: *,
   onMessagePress(message: ChatMessage): mixed,
+  onRequestPreviousMessages: *,
+  viewer: ChatUser,
 };
 
 type State = {};
@@ -77,7 +78,11 @@ export class MessageList extends React.Component<Props, State> {
                 {conversation && viewer ? (
                   <React.Fragment>{conversation.messages.map(this.renderMessage)}</React.Fragment>
                 ) : null}
-                {this.props.conversation.endReached ? <MessagesEndList /> : <Loader />}
+                {this.props.busy ? (
+                  <Loader />
+                ) : this.props.conversation.endReached ? (
+                  <MessagesEndList />
+                ) : null}
               </View>
             </MessagesScrollView>
           );

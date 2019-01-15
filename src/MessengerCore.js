@@ -17,6 +17,7 @@ import {
   createSubToAppearanceStatus,
   cancelSubToAppearanceStatus,
 } from './ConnectionManager/messages';
+import { loading } from './store/actions';
 import type { SocketAction, ChatMessage } from './types';
 
 type Props = {
@@ -71,6 +72,7 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    this.dispatch(loading({ merge_conversations: true }));
     onMessage(message => {
       const m = message.message;
       if (!m) {

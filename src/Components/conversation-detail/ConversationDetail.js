@@ -13,11 +13,13 @@ import {
   cancelSubToConversation,
   requestMessagesBatch,
 } from '../../ConnectionManager/messages';
+import { loading } from '../../store/actions';
 import { MessageList } from './MessageList';
 import type { MessageBatchRequest } from '../../types';
 
 type Props = {
   activeConversationId: *,
+  loadingMessages: boolean,
   onMessagePress(message: *): mixed,
 };
 
@@ -51,6 +53,9 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 
   onRequestPreviousMessages = () => {
+    if (this.props.loadingMessages) {
+      return;
+    }
     const detail = this.props.conversationDetail;
     this.props.requestMessages({
       conversation_id: detail.conversation_id,
@@ -74,6 +79,7 @@ class Renderer extends React.Component<Props & CP, State> {
               viewer={this.props.viewer}
               onRequestPreviousMessages={this.onRequestPreviousMessages}
               onMessagePress={this.props.onMessagePress}
+              busy={this.props.loadingMessages}
             />
           ) : (
             <Loader />
@@ -85,6 +91,7 @@ class Renderer extends React.Component<Props & CP, State> {
 }
 
 const mapState = (state, props) => ({
+  loadingMessages: select.loading(state, 'get_messages'),
   conversationDetail: select.conversationDetail(state, {
     conversation_id: props.activeConversationId,
   }),
@@ -96,7 +103,10 @@ const mapDispatch = (dispatch: Dispatch<*>, props) => ({
     dispatchSocketMessage(createSubToConversation(props.activeConversationId)),
   unsubscribeFromUpdates: () =>
     dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
-  requestMessages: request => dispatchSocketMessage(requestMessagesBatch(request)),
+  requestMessages: request => {
+    dispatch(loading({ get_messages: true }));
+    dispatchSocketMessage(requestMessagesBatch(request));
+  },
 });
 
 export const ConversationDetail = connect(
