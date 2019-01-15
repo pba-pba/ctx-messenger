@@ -35,19 +35,21 @@ class Renderer extends React.Component<Props> {
         {context => {
           const { Loader, ListNoContent } = context.components;
           return this.props.conversations && this.props.viewer ? (
-            this.props.loadingConversations ? (
-              <Loader />
-            ) : this.props.conversations.length ? (
+            this.props.conversations.length ? (
               <ListRenderer
                 activeConversationId={this.props.activeConversationId}
                 conversations={this.props.conversations}
                 onRequestConversationDetail={this.props.onRequestConversationDetail}
                 viewer={this.props.viewer}
               />
+            ) : this.props.loadingConversations ? (
+              <Loader />
             ) : (
               <ListNoContent />
             )
-          ) : null;
+          ) : (
+            <Loader />
+          );
         }}
       </MessengerContext.Consumer>
     );

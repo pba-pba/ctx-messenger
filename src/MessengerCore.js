@@ -28,6 +28,7 @@ type Props = {
   closeOnUnmount: boolean,
   onConversationsCreated?: (ids: string[]) => mixed,
   onMessageCreated?: (messages: ChatMessage[]) => mixed,
+  onConnected?: () => mixed,
   colors: {
     brand: *,
     grayText: *,
@@ -117,6 +118,10 @@ export class MessengerCore extends React.Component<Props, State> {
               <React.Fragment>
                 <EventBinder
                   didMount={() => {
+                    if (this.props.onConnected) {
+                      this.props.onConnected();
+                    }
+
                     dispatchSocketMessage(createSubToSubscriptionsChannel());
                     dispatchSocketMessage(createSubToUsersChannel());
                     if (Platform.OS === 'web') {
