@@ -20,6 +20,7 @@ type State = {
   message: string,
   submiting: boolean,
   uploading: boolean,
+  hasWhiteboardContent: boolean,
 };
 
 type ButtonProps = {
@@ -57,6 +58,7 @@ class Renderer extends React.Component<Props & CP, State> {
     message: '',
     submiting: false,
     uploading: false,
+    hasWhiteboardContent: false,
   };
 
   whiteboardManagerMobile = null;
@@ -81,6 +83,7 @@ class Renderer extends React.Component<Props & CP, State> {
           this.whiteboardManagerMobile.clearCanvas();
           this.whiteboardManagerMobile.clearCanvas();
           this.whiteboardManagerMobile = null;
+          this.setState({ hasWhiteboardContent: false });
         }
       }
 
@@ -100,20 +103,18 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 
   getWhiteboardImage = context => {
-    return new Promise((resolve, reject) => {
-      this.whiteboardManagerMobile.hasContent(async available => {
-        if (available) {
-          const whiteboardImage = await new Promise(resolve => {
-            this.whiteboardManagerMobile.getImageUri(resolve);
-          });
+    return new Promise(async resolve => {
+      if (this.state.hasWhiteboardContent) {
+        const whiteboardImage = await new Promise(resolve => {
+          this.whiteboardManagerMobile.getImageUri(resolve);
+        });
 
-          const response = await context.functions.uploadFile(whiteboardImage);
+        const response = await context.functions.uploadFile(whiteboardImage);
 
-          resolve(response);
-        }
+        resolve(response);
+      }
 
-        resolve({ available: available });
-      });
+      resolve({ available: this.state.hasWhiteboardContent });
     });
   };
 
@@ -137,7 +138,12 @@ class Renderer extends React.Component<Props & CP, State> {
 
   openWhiteboardMobile(openWhiteboard) {
     return async () => {
-      const whiteboard = await openWhiteboard();
+      const whiteboard = await openWhiteboard(() => {
+        whiteboard.hasContent(available => {
+          this.setState({ hasWhiteboardContent: available });
+        });
+      });
+
       this.whiteboardManagerMobile = whiteboard;
     };
   }
@@ -249,7 +255,7 @@ class Renderer extends React.Component<Props & CP, State> {
                         : null}
                       {functions.openWhiteboard ? (
                         <Button
-                          active={!!this.state.whiteboard}
+                          active={this.state.hasWhiteboardContent}
                           brandColor={colors.brand}
                           onPress={
                             Platform.OS === 'web'
