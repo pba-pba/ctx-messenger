@@ -28,24 +28,6 @@ class Renderer extends React.Component<Props, State> {
     loading: false,
   };
 
-  componentDidMount() {
-    this.props.subscribeToUpdates();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (Platform.OS === 'web') {
-      return;
-    }
-
-    if (prevProps.activeConversationId !== this.props.activeConversationId) {
-      this.props.subscribeToUpdates();
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.unsubscribeFromUpdates();
-  }
-
   onPress = async () => {
     this.setState({ loading: true });
     await this.props.onPress(data => {
