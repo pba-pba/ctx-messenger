@@ -57,7 +57,7 @@ class Renderer extends React.Component<Props> {
 }
 
 const mapState = (state, props) => ({
-  loadingConversations: select.loading(state, 'merge_conversations'),
+  loadingConversations: select.loading(state, 'conversations'),
   conversations: select.conversations(state),
   viewer: select.viewer(state),
 });

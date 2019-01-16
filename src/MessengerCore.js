@@ -73,7 +73,7 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.dispatch(loading({ merge_conversations: true }));
+    this.dispatch(loading({ conversations: true }));
     onMessage(message => {
       const m = message.message;
       if (!m) {

@@ -55,7 +55,7 @@ export function reducer(state: State = InitialState, action: Action) {
           conversations: { $merge: entities.conversations || {} },
           users: { $merge: entities.users || {} },
         },
-        loading: { $merge: { merge_conversations: false } },
+        loading: { $merge: { conversations: false } },
       });
     }
 
@@ -67,7 +67,7 @@ export function reducer(state: State = InitialState, action: Action) {
           conversations: { $set: entities.conversations || {} },
           users: { $set: entities.users || {} },
         },
-        loading: { $merge: { replace_conversations: false } },
+        loading: { $merge: { conversations: false } },
       });
     }
 
