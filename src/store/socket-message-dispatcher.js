@@ -15,16 +15,15 @@ export const socketMessageDispatcher = (store: *) => (next: *) => (action: Actio
         });
 
         if (detail === undefined) {
-          const message = ws.requestMessagesBatch({
-            // $FlowExpectedError
-            conversation_id: identifier.conversation_id,
-            limit: 20,
-            cursor: undefined,
-          });
-          dispatchSocketMessage(message);
+          dispatchSocketMessage(
+            ws.requestMessagesBatch({
+              // $FlowExpectedError
+              conversation_id: identifier.conversation_id,
+              limit: 20,
+              cursor: undefined,
+            }),
+          );
         }
-
-        return next(action);
       }
 
       return next(action);

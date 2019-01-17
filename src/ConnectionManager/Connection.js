@@ -47,6 +47,7 @@ class Connection {
   };
 
   _onSocketClose = (evt: Event) => {
+    this.config.reconnect();
     console.log('websocket close');
   };
 
@@ -88,9 +89,9 @@ export function createConnection(config: Config): Connection {
   return connectionSingleton;
 }
 
-export function dispatchSocketMessage(message: any) {
+export function dispatchSocketMessage(...messages: Array<any>) {
   if (connectionSingleton) {
-    connectionSingleton.send(message);
+    connectionSingleton.send(...messages);
   } else {
     console.log('Connection is not ready yet');
   }

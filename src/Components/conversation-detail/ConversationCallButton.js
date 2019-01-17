@@ -7,7 +7,6 @@ import { Platform, Touchable, View } from 'react-primitives';
 
 import { select, actions } from '../../store';
 import { dispatchSocketMessage } from '../../ConnectionManager/Connection';
-import { createSubToConversation, cancelSubToConversation } from '../../ConnectionManager/messages';
 import { MessengerContext } from '../../MessengerContext';
 
 type Props = {
@@ -15,8 +14,6 @@ type Props = {
   conversation: *,
   viewer: *,
   onPress(): mixed,
-  subscribeToUpdates(): mixed,
-  unsubscribeFromUpdates(): mixed,
 };
 
 type State = {
@@ -66,10 +63,6 @@ const mapState = (state, props) => ({
 });
 
 const mapDispatch = (dispatch: Dispatch<*>, props) => ({
-  subscribeToUpdates: () =>
-    dispatchSocketMessage(createSubToConversation(props.activeConversationId)),
-  unsubscribeFromUpdates: () =>
-    dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
   sendMessage: (data: *) => dispatch(actions.sendMessage(data)),
 });
 

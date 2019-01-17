@@ -38,13 +38,24 @@ class Renderer extends React.Component<Props & CP, State> {
     this.props.subscribeToUpdates();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (Platform.OS === 'web') {
       return;
     }
 
     if (prevProps.activeConversationId !== this.props.activeConversationId) {
       this.props.subscribeToUpdates();
+    }
+  }
+
+  // ak niekto zmaze tuto cas, ruky a nohy dolamem!!
+  componentWillReceiveProps(nextProps: Props) {
+    if (Platform.OS === 'web') {
+      return;
+    }
+
+    if (nextProps.activeConversationId !== this.props.activeConversationId) {
+      this.props.unsubscribeFromUpdates();
     }
   }
 

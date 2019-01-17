@@ -122,14 +122,18 @@ export class MessengerCore extends React.Component<Props, State> {
                       this.props.onConnected();
                     }
 
-                    dispatchSocketMessage(createSubToSubscriptionsChannel());
-                    dispatchSocketMessage(createSubToUsersChannel());
-                    dispatchSocketMessage(createSubToAppearanceStatus());
+                    dispatchSocketMessage(
+                      createSubToSubscriptionsChannel(),
+                      createSubToUsersChannel(),
+                      createSubToAppearanceStatus(),
+                    );
                   }}
                   willUnmount={() => {
                     if (Platform.OS === 'web') {
-                      dispatchSocketMessage(cancelSubToSubscriptionsChannel());
-                      dispatchSocketMessage(cancelSubToUsersChannel());
+                      dispatchSocketMessage(
+                        cancelSubToSubscriptionsChannel(),
+                        cancelSubToUsersChannel(),
+                      );
                     }
 
                     dispatchSocketMessage(cancelSubToAppearanceStatus());
