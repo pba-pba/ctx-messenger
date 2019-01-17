@@ -62,6 +62,7 @@ export class MessengerCore extends React.Component<Props, State> {
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
       dispatch: this.dispatch,
       reconnect: this.reconnect,
+      onSocketClose: this.props.onSocketClose,
     });
   };
 
