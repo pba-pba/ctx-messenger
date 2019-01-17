@@ -47,7 +47,6 @@ class Connection {
   };
 
   _onSocketClose = (evt: Event) => {
-    this.config.reconnect();
     console.log('websocket close');
   };
 
