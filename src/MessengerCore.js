@@ -17,7 +17,7 @@ import {
   createSubToAppearanceStatus,
   cancelSubToAppearanceStatus,
 } from './ConnectionManager/messages';
-import { loading } from './store/actions';
+import { clear, loading } from './store/actions';
 import type { SocketAction, ChatMessage } from './types';
 
 type Props = {
@@ -97,14 +97,6 @@ export class MessengerCore extends React.Component<Props, State> {
     });
   }
 
-  componentWillUnmount() {
-    onMessage(() => {});
-
-    if (this.props.closeOnUnmount) {
-      this.connectionManager.close();
-    }
-  }
-
   dispatch = (action: SocketAction) => {
     store.dispatch(action);
   };
@@ -138,6 +130,13 @@ export class MessengerCore extends React.Component<Props, State> {
                     }
 
                     dispatchSocketMessage(cancelSubToAppearanceStatus());
+
+                    onMessage(() => {});
+
+                    if (this.props.closeOnUnmount) {
+                      this.dispatch(clear());
+                      this.connectionManager.close();
+                    }
                   }}
                 />
                 {this.props.children}
