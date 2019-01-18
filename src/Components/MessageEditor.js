@@ -121,16 +121,17 @@ class Renderer extends React.Component<Props & CP, State> {
   openAttachmentPicker(cb) {
     return async e => {
       this.setState({ uploading: true });
-      const responses = await cb(e);
-
-      responses.map(response => {
-        if (response.ok) {
-          this.setState(({ attachments }) => {
-            attachments.push(response.data.id);
-            return { attachments };
-          });
-        }
-      });
+      const response = await cb(e);
+      if (response.ok) {
+        response.data.map(res => {
+          if (res.ok) {
+            this.setState(({ attachments }) => {
+              attachments.push(res.data.id);
+              return { attachments };
+            });
+          }
+        });
+      }
 
       this.setState({ uploading: false });
     };
@@ -213,22 +214,14 @@ class Renderer extends React.Component<Props & CP, State> {
   renderSubmitButton = context => {
     const { Loader } = context.components;
     const { colors } = context;
-    const disabled = this.state.uploading;
+    const disabled = this.state.submiting || this.state.uploading;
     return (
       <Touchable onPress={this.sendMessage(context)} onLayout={this.onLayout} disabled={disabled}>
         <View style={styles.buttonWrapper}>
-          {this.state.submiting ? (
+          {disabled ? (
             <Loader />
           ) : (
-            <Text
-              style={[
-                styles.button,
-                { color: colors.brand },
-                disabled ? { opacity: 0.5 } : undefined,
-              ]}
-            >
-              Send
-            </Text>
+            <Text style={[styles.button, { color: colors.brand }]}>Send</Text>
           )}
         </View>
       </Touchable>
