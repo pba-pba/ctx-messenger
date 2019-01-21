@@ -2,7 +2,7 @@
 
 import { dispatchSocketMessage } from '../ConnectionManager/Connection';
 import * as ws from '../ConnectionManager/messages';
-import { select } from './select';
+// import { select } from './select';
 import type { Action } from './actions';
 
 export const socketMessageDispatcher = (store: *) => (next: *) => (action: Action) => {
@@ -10,20 +10,20 @@ export const socketMessageDispatcher = (store: *) => (next: *) => (action: Actio
     case 'confirm_subscription': {
       const { identifier } = action;
       if (identifier.channel === 'ConversationsChannel') {
-        const detail = select.conversationDetail(store.getState(), {
-          conversation_id: identifier.conversation_id,
-        });
+        // const detail = select.conversationDetail(store.getState(), {
+        //   conversation_id: identifier.conversation_id,
+        // });
 
-        if (detail === undefined) {
-          dispatchSocketMessage(
-            ws.requestMessagesBatch({
-              // $FlowExpectedError
-              conversation_id: identifier.conversation_id,
-              limit: 20,
-              cursor: undefined,
-            }),
-          );
-        }
+        // if (detail === undefined) {
+        dispatchSocketMessage(
+          ws.requestMessagesBatch({
+            // $FlowExpectedError
+            conversation_id: identifier.conversation_id,
+            limit: 20,
+            cursor: undefined,
+          }),
+        );
+        // }
       }
 
       return next(action);
