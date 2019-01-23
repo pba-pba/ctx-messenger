@@ -6,20 +6,22 @@ import { type Dispatch } from 'redux';
 
 import { ConnectionGate } from '../ConnectionGate';
 import {
+  clear,
+  createConversation,
+  searchConversationsByUsers,
   searchConversationsByTerm,
   searchUsersByTerm,
-  setDraft,
   sendMessage,
-  createConversation,
-  clear,
+  setDraft,
 } from '../store/actions';
 
 type CP = {
+  clear(): mixed,
+  searchConversationsByUsers(users: *): mixed,
   searchConversationsByTerm(term: string): mixed,
   searchUsersByTerm(term: string): mixed,
-  setDraft(draft: any): mixed,
   sendMessage(data: *): mixed,
-  clear(): mixed,
+  setDraft(draft: any): mixed,
 };
 
 type Props = {
@@ -35,7 +37,11 @@ const mapState = (state, props) => ({});
 const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   searchConversationsByTerm: term => dispatch(searchConversationsByTerm(term)),
   searchUsersByTerm: term => dispatch(searchUsersByTerm(term)),
-  setDraft: draft => dispatch(setDraft(draft)),
+  searchConversationsByUsers: users => dispatch(searchConversationsByUsers(users)),
+  setDraft: draft => {
+    dispatch(searchConversationsByUsers(draft.users));
+    dispatch(setDraft(draft));
+  },
   sendMessage: data => dispatch(sendMessage(data)),
   createConversation: data => dispatch(createConversation(data)),
   clear: () => dispatch(clear()),

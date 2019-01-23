@@ -26,9 +26,10 @@ type Props = {
   socketUrl: string,
   appConfig: string,
   closeOnUnmount: boolean,
-  onConversationsCreated?: (ids: string[]) => mixed,
-  onMessageCreated?: (messages: ChatMessage[]) => mixed,
   onConnected?: () => mixed,
+  onConversationsCreated?: (ids: string[]) => mixed,
+  onConversationsFound?: (ids: string[]) => mixed,
+  onMessageCreated?: (messages: ChatMessage[]) => mixed,
   colors: {
     brand: *,
     grayText: *,
@@ -85,6 +86,11 @@ export class MessengerCore extends React.Component<Props, State> {
         case 'merge_conversations':
           if (m.result.new_conversation_ids.length && this.props.onConversationsCreated) {
             this.props.onConversationsCreated(m.result.new_conversation_ids);
+          }
+          break;
+        case 'search_conversations':
+          if (this.props.onConversationsFound) {
+            this.props.onConversationsFound(m.result.new_conversation_ids);
           }
           break;
         case 'unshift_messages':

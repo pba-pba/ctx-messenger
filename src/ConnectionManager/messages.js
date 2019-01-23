@@ -127,3 +127,14 @@ export function searchConversationsByTerm(term: string) {
     },
   };
 }
+
+export function searchConversationsByUsers(users: string) {
+  return {
+    command: 'message',
+    identifier: { channel: 'SubscriptionsChannel' },
+    data: {
+      action: 'search_conversations',
+      payload: { users: users },
+    },
+  };
+}

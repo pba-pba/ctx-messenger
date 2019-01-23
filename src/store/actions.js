@@ -26,6 +26,10 @@ export function searchConversationsByTerm(term: string): ClientAction {
   return { type: 'request_search_conversations', term: term };
 }
 
+export function searchConversationsByUsers(users: string): ClientAction {
+  return { type: 'request_search_conversations_by_users', users: users };
+}
+
 export function setDraft(draft: Object): ClientAction {
   return { type: 'set_draft', draft: draft };
 }

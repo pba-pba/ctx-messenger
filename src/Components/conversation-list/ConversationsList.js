@@ -11,7 +11,7 @@ import { dispatchSocketMessage } from '../../ConnectionManager/Connection';
 import { readChatMessages } from '../../ConnectionManager/messages';
 
 type Props = {|
-  activeConversationId: *,
+  activeConversationId?: *,
   conversations: *,
   onRequestConversationDetail: *,
   viewer: *,
