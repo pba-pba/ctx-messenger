@@ -90,7 +90,7 @@ export class MessengerCore extends React.Component<Props, State> {
           break;
         case 'search_conversations':
           if (this.props.onConversationsFound) {
-            this.props.onConversationsFound(m.result.new_conversation_ids);
+            this.props.onConversationsFound(m.result.conversations);
           }
           break;
         case 'unshift_messages':

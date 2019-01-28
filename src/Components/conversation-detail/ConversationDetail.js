@@ -111,9 +111,13 @@ const mapState = (state, props) => ({
 
 const mapDispatch = (dispatch: Dispatch<*>, props) => ({
   subscribeToUpdates: () =>
-    dispatchSocketMessage(createSubToConversation(props.activeConversationId)),
+    props.activeConversationId
+      ? dispatchSocketMessage(createSubToConversation(props.activeConversationId))
+      : null,
   unsubscribeFromUpdates: () =>
-    dispatchSocketMessage(cancelSubToConversation(props.activeConversationId)),
+    props.activeConversationId
+      ? dispatchSocketMessage(cancelSubToConversation(props.activeConversationId))
+      : null,
   requestMessages: request => {
     dispatch(loading({ get_messages: true }));
     dispatchSocketMessage(requestMessagesBatch(request));
