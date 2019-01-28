@@ -135,11 +135,10 @@ export class MessengerCore extends React.Component<Props, State> {
                       );
                     }
 
-                    dispatchSocketMessage(cancelSubToAppearanceStatus());
-
                     onMessage(() => {});
 
                     if (this.props.closeOnUnmount) {
+                      dispatchSocketMessage(cancelSubToAppearanceStatus());
                       this.dispatch(clear());
                       this.connectionManager.close();
                     }
