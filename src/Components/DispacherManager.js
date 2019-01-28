@@ -39,7 +39,9 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   searchUsersByTerm: term => dispatch(searchUsersByTerm(term)),
   searchConversationsByUsers: users => dispatch(searchConversationsByUsers(users)),
   setDraft: draft => {
-    dispatch(searchConversationsByUsers(draft.users));
+    if (draft) {
+      dispatch(searchConversationsByUsers(draft.users));
+    }
     dispatch(setDraft(draft));
   },
   sendMessage: data => dispatch(sendMessage(data)),
