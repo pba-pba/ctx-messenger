@@ -8,6 +8,7 @@ import type { Action } from './actions';
 import type { State } from '../types';
 
 const InitialState: State = {
+  notifications: { unread_count: 0 },
   activeConversationId: undefined,
   connected: false,
   conversations: undefined,
@@ -119,6 +120,13 @@ export function reducer(state: State = InitialState, action: Action) {
 
     case 'search_users': {
       return update(state, { usersInSearch: { $set: action.result.users } });
+    }
+
+    /**
+     * Notifications
+     */
+    case 'badge_notifications': {
+      return update(state, { notifications: { $set: action.result } });
     }
 
     default:

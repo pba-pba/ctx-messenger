@@ -58,6 +58,7 @@ export type ConversationState = {
 };
 
 export type State = {
+  notifications: { unread_count: number },
   activeConversationId: void | string,
   connected: boolean,
   conversations: void | Array<ChatConversationSlim>,

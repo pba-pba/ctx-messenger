@@ -10,6 +10,7 @@ export { ConversationsList } from './Components/conversation-list';
 export { Loader } from './Components/Loader';
 export { MessageBubble } from './Components/MessageBubble';
 export { MessageEditor } from './Components/MessageEditor';
+export { MessengerNotifications } from './Components/MessengerNotifications';
 // TODO remove and use SubscriberInternal
 export { Subscriber } from './Subscriber';
 export { UserAutocompleteManager } from './Components/UserAutocompleteManager';
