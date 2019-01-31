@@ -46,17 +46,21 @@ export class MessageBubble extends React.Component<Props, State> {
   renderMessage = () => {
     return (
       <MessengerContext.Consumer>
-        {context => (
-          <Text
-            style={[
-              { color: context.colors.blackText },
-              styles.messageText,
-              Platform.OS === 'web' ? { wordBreak: 'break-all' } : undefined,
-            ]}
-          >
-            {this.props.message.body}
-          </Text>
-        )}
+        {context => {
+          const textStyle = { color: context.colors.blackText, ...styles.messageText };
+          return Platform.OS === 'web' ? (
+            <div
+              style={{
+                wordBreak: 'break-word',
+                ...textStyle,
+              }}
+            >
+              {this.props.message.body}
+            </div>
+          ) : (
+            <Text style={textStyle}>{this.props.message.body}</Text>
+          );
+        }}
       </MessengerContext.Consumer>
     );
   };

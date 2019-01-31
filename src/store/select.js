@@ -48,4 +48,8 @@ export const select = {
   viewer(state: State) {
     return state.viewer;
   },
+
+  notifications(state: State) {
+    return state.notifications;
+  },
 };
