@@ -66,6 +66,12 @@ export type State = {
   entities: { conversations: {}, users: {}, details: {} },
   usersInSearch: ChatUser[],
   viewer: void | ChatUser,
+  channels: {
+    SubscriptionsChannel: boolean,
+    UsersChannel: boolean,
+    AppearancesChannel: boolean,
+    ConversationsChannel: boolean,
+  },
 };
 
 /**

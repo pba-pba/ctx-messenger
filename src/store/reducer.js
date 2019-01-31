@@ -17,6 +17,7 @@ const InitialState: State = {
   usersInSearch: [],
   viewer: undefined,
   loading: { get_messages: false, conversations: false },
+  channels: {},
 };
 
 export function reducer(state: State = InitialState, action: Action) {
@@ -37,15 +38,26 @@ export function reducer(state: State = InitialState, action: Action) {
       return update(state, { viewer: { $set: action.user } });
     }
 
+    case 'unsubscribe': {
+      return update(state, {
+        channels: { $merge: { [identifier.channel]: false } },
+      });
+    }
+
     case 'confirm_subscription': {
       const { identifier } = action;
-      if (identifier.channel === 'ConversationsChannel') {
-        return update(state, {
-          activeConversationId: { $set: identifier.conversation_id },
-          draft: { $set: undefined },
-        });
+      switch (identifier.channel) {
+        case 'ConversationsChannel':
+          return update(state, {
+            activeConversationId: { $set: identifier.conversation_id },
+            draft: { $set: undefined },
+            channels: { $merge: { [identifier.channel]: true } },
+          });
+        default:
+          return update(state, {
+            channels: { $merge: { [identifier.channel]: true } },
+          });
       }
-      return state;
     }
 
     case 'merge_conversations': {

@@ -52,4 +52,8 @@ export const select = {
   notifications(state: State) {
     return state.notifications;
   },
+
+  channels(state: State) {
+    return state.channels;
+  },
 };

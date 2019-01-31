@@ -20,6 +20,7 @@ class Renderer extends React.Component<Props & CP, State> {
   getRenderProps = () => ({
     connected: this.props.connected,
     viewer: this.props.viewer,
+    channels: this.props.channels,
   });
 
   render() {
@@ -30,6 +31,7 @@ class Renderer extends React.Component<Props & CP, State> {
 const mapState = (state, props) => ({
   connected: select.connected(state),
   viewer: select.viewer(state),
+  channels: select.channels(state),
 });
 
 export const ConnectionGate = connect(mapState)(Renderer);

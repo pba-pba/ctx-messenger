@@ -83,7 +83,6 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.dispatch(loading({ conversations: true }));
     onMessage(message => {
       const m = message.message;
       if (!m) {
@@ -121,7 +120,7 @@ export class MessengerCore extends React.Component<Props, State> {
       <Provider store={store}>
         <MessengerContext.Provider value={contextValue}>
           <ConnectionGate>
-            {() => (
+            {state => (
               <React.Fragment>
                 <EventBinder
                   didMount={() => {
@@ -129,11 +128,18 @@ export class MessengerCore extends React.Component<Props, State> {
                       this.props.onConnected();
                     }
 
-                    dispatchSocketMessage(
-                      createSubToSubscriptionsChannel(),
-                      createSubToUsersChannel(),
-                      createSubToAppearanceStatus(),
-                    );
+                    if (!state.channels.SubscriptionsChannel) {
+                      this.dispatch(loading({ conversations: true }));
+                      dispatchSocketMessage(createSubToSubscriptionsChannel());
+                    }
+
+                    if (!state.channels.AppearancesChannel) {
+                      dispatchSocketMessage(createSubToUsersChannel());
+                    }
+
+                    if (!state.channels.UsersChannel) {
+                      dispatchSocketMessage(createSubToAppearanceStatus());
+                    }
                   }}
                   willUnmount={() => {
                     if (Platform.OS === 'web') {
