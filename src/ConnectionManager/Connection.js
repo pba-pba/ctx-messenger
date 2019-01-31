@@ -37,6 +37,9 @@ class Connection {
   };
 
   _onSocketError = (evt: Event) => {
+    if (this.config._onSocketError) {
+      this.config.onSocketError(evt);
+    }
     switch (evt.readyState) {
       case evt.CLOSED:
         this.config.reconnect();

@@ -19,6 +19,7 @@ export class ConnectionManager {
       socketUrl: config.socketUrl,
       reconnect: config.reconnect,
       onSocketClose: config.onSocketClose,
+      onSocketError: config.onSocketError,
     });
   }
 
