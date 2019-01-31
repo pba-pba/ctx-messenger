@@ -16,7 +16,7 @@ const InitialState: State = {
   entities: { conversations: {}, users: {}, messages: {}, details: {} },
   usersInSearch: [],
   viewer: undefined,
-  loading: { get_messages: false, merge_conversations: false, replace_conversations: false },
+  loading: { get_messages: false, conversations: false },
 };
 
 export function reducer(state: State = InitialState, action: Action) {
