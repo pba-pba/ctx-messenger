@@ -37,7 +37,7 @@ class Connection {
   };
 
   _onSocketError = (evt: Event) => {
-    if (this.config._onSocketError) {
+    if (this.config.onSocketError) {
       this.config.onSocketError(evt);
     }
     switch (evt.readyState) {
