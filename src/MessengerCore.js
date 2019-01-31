@@ -75,6 +75,13 @@ export class MessengerCore extends React.Component<Props, State> {
     }, 1000);
   };
 
+  disconnect = () => {
+    dispatchSocketMessage(cancelSubToAppearanceStatus());
+    setTimeout(() => {
+      this.connectionManager.close();
+    }, 500);
+  };
+
   componentDidMount() {
     this.dispatch(loading({ conversations: true }));
     onMessage(message => {
