@@ -32,7 +32,7 @@ class Connection {
       .catch(error => {
         // DO NOT REMOVE THIS!
         console.warn('Could not connect, report error');
-        console.error(error);
+        // console.error(error);
       });
   };
 
@@ -45,7 +45,7 @@ class Connection {
         this.config.reconnect();
         break;
       default:
-        console.error('websocket error', evt);
+      // console.error('websocket error', evt);
     }
   };
 

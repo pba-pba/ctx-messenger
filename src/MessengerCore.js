@@ -69,17 +69,24 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   reconnect = () => {
-    this.connectionManager.close();
-    setTimeout(() => {
-      this.connect();
-    }, 1000);
+    this.connect();
+
+    this.connectionManager.connection.ws.onopen = () => {
+      const { ws } = this.connectionManager.connection;
+
+      switch (ws.readyState) {
+        case ws.OPEN:
+          this.subscribeToChannels(store.getState());
+          break;
+        default:
+      }
+    };
   };
 
   disconnect = () => {
     dispatchSocketMessage(cancelSubToAppearanceStatus());
-    setTimeout(() => {
-      this.connectionManager.close();
-    }, 500);
+    this.dispatch(clear());
+    this.connectionManager.close();
   };
 
   componentDidMount() {
@@ -114,6 +121,21 @@ export class MessengerCore extends React.Component<Props, State> {
     store.dispatch(action);
   };
 
+  subscribeToChannels = state => {
+    if (!state.channels.SubscriptionsChannel) {
+      this.dispatch(loading({ conversations: true }));
+      dispatchSocketMessage(createSubToSubscriptionsChannel());
+    }
+
+    if (!state.channels.AppearancesChannel) {
+      dispatchSocketMessage(createSubToUsersChannel());
+    }
+
+    if (!state.channels.UsersChannel) {
+      dispatchSocketMessage(createSubToAppearanceStatus());
+    }
+  };
+
   render() {
     const { children, accessToken, socketUrl, ...contextValue } = this.props;
     return (
@@ -128,18 +150,7 @@ export class MessengerCore extends React.Component<Props, State> {
                       this.props.onConnected();
                     }
 
-                    if (!state.channels.SubscriptionsChannel) {
-                      this.dispatch(loading({ conversations: true }));
-                      dispatchSocketMessage(createSubToSubscriptionsChannel());
-                    }
-
-                    if (!state.channels.AppearancesChannel) {
-                      dispatchSocketMessage(createSubToUsersChannel());
-                    }
-
-                    if (!state.channels.UsersChannel) {
-                      dispatchSocketMessage(createSubToAppearanceStatus());
-                    }
+                    this.subscribeToChannels(state);
                   }}
                   willUnmount={() => {
                     if (Platform.OS === 'web') {
