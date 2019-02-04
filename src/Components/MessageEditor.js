@@ -77,7 +77,7 @@ class Renderer extends React.Component<Props & CP, State> {
         const response = await this.getWhiteboardImage(context);
 
         if (response.available !== false) {
-          attachments.push(response.data.id);
+          attachments.push(response.data);
 
           this.whiteboardManagerMobile.clearCanvas();
           this.whiteboardManagerMobile.clearCanvas();
@@ -92,7 +92,7 @@ class Renderer extends React.Component<Props & CP, State> {
 
         this.props.sendMessage({
           body: this.state.message,
-          attachments: attachments,
+          attachments: attachments.map(attachment => attachment.id),
         });
 
         this.setState({ message: '', attachments: [] });
@@ -126,7 +126,7 @@ class Renderer extends React.Component<Props & CP, State> {
         response.data.map(res => {
           if (res.ok) {
             this.setState(({ attachments }) => {
-              attachments.push(res.data.id);
+              attachments.push(res.data);
               return { attachments };
             });
           }
@@ -154,6 +154,15 @@ class Renderer extends React.Component<Props & CP, State> {
       const response = await openWhiteboard();
 
       console.log('web', response);
+    };
+  }
+
+  onRemoveAttachment(attachment) {
+    return () => {
+      this.setState(({ attachments }) => {
+        attachments.splice(attachments.findIndex(att => att.id === attachment.id), 1);
+        return { attachments };
+      });
     };
   }
 
@@ -228,6 +237,23 @@ class Renderer extends React.Component<Props & CP, State> {
     );
   };
 
+  renderAttachment(context) {
+    return attachment => (
+      <View key={attachment.id} style={styles.attachmentItem}>
+        <Text style={[{ color: context.colors.grayText }, styles.attachmentName]}>
+          {attachment.filename}
+        </Text>
+        <Touchable onPress={this.onRemoveAttachment(attachment)}>
+          <Text style={[{ color: context.colors.grayText }, styles.attachmentButton]}>✕</Text>
+        </Touchable>
+      </View>
+    );
+  }
+
+  renderAttachments = context => {
+    return this.state.attachments.map(this.renderAttachment(context));
+  };
+
   render() {
     return (
       <MessengerContext.Consumer>
@@ -237,6 +263,7 @@ class Renderer extends React.Component<Props & CP, State> {
 
           return (
             <View style={styles.container}>
+              {this.renderAttachments(context)}
               <View style={styles.inputContainer}>
                 <View style={styles.buttons}>
                   {functions ? (
@@ -340,4 +367,15 @@ const styles = StyleSheet.create({
     top: 0,
     right: 5,
   },
+  attachmentItem: {
+    height: 30,
+    borderRadius: 3,
+    width: '100%',
+    paddingLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    backgroundColor: '#EEF1F2',
+  },
+  attachmentName: { fontSize: 12, lineHeight: 30, flex: 1 },
+  attachmentButton: { fontSize: 20, lineHeight: 30, paddingHorizontal: 10 },
 });
