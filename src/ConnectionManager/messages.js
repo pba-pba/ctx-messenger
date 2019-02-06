@@ -117,6 +117,23 @@ export function createConversation(userIds: Array<string>, message: ChatMessage)
   };
 }
 
+export function createConversationForRemoteUsers(
+  remoteUserIds: Array<string>,
+  message: ChatMessage,
+) {
+  return {
+    command: 'message',
+    identifier: { channel: 'SubscriptionsChannel' },
+    data: {
+      action: 'create_conversation',
+      payload: {
+        remoteUserIds: remoteUserIds,
+        message: message,
+      },
+    },
+  };
+}
+
 export function searchConversationsByTerm(term: string) {
   return {
     command: 'message',

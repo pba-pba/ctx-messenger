@@ -40,6 +40,13 @@ export const socketMessageDispatcher = (store: *) => (next: *) => (action: Actio
       return next(action);
     }
 
+    case 'create_conversation_for_remote_users': {
+      dispatchSocketMessage(
+        ws.createConversationForRemoteUsers(action.payload.users, action.payload.message),
+      );
+      return next(action);
+    }
+
     // Search users
     case 'request_search_users': {
       dispatchSocketMessage(ws.searchUsersByTerm(action.term));

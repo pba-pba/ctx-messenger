@@ -2,7 +2,7 @@
 
 import { store } from './store';
 import { select } from './select';
-import type { ClientAction, SocketAction } from '../types';
+import type { ClientAction, SocketAction, ChatContact } from '../types';
 
 export type Action = ClientAction | SocketAction;
 
@@ -73,4 +73,32 @@ export function sendMessage(data: { body: string, attachments: Array<string> }):
   }
 
   return { type: 'messenger:unknown-action' };
+}
+
+export function sendMessageForRemoteUsers(
+  data: {
+    body: string,
+    attachments: string[],
+  },
+  remoteUsers: ChatContact[],
+): ClientAction {
+  // const msg = {
+  //   message_type: 'text',
+  //   ...data,
+  //   // $FlowExpectedError
+  //   user: select.viewer(store.getState()),
+  //   client_message_id: new Date().getTime().toString(),
+  //   // $FlowExpectedError
+  //   conversation_id: undefined,
+  //   id: '',
+  //   timestamp: new Date().toString(),
+  // };
+
+  return {
+    type: 'create_conversation_for_remote_users',
+    payload: {
+      // message: msg,
+      users: remoteUsers.map(user => user.id),
+    },
+  };
 }

@@ -4,24 +4,29 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
 
+import { select } from '../store';
 import { ConnectionGate } from '../ConnectionGate';
 import {
   clear,
   createConversation,
-  searchConversationsByUsers,
   searchConversationsByTerm,
+  searchConversationsByUsers,
   searchUsersByTerm,
   sendMessage,
+  sendMessageForRemoteUsers,
   setDraft,
 } from '../store/actions';
 
+import type { ChatUser } from '../types';
+
 type CP = {
   clear(): mixed,
-  searchConversationsByUsers(users: *): mixed,
   searchConversationsByTerm(term: string): mixed,
+  searchConversationsByUsers(users: *): mixed,
   searchUsersByTerm(term: string): mixed,
   sendMessage(data: *): mixed,
   setDraft(draft: any): mixed,
+  viewer: ChatUser,
 };
 
 type Props = {
@@ -32,7 +37,9 @@ function Renderer(props: Props & CP) {
   return <ConnectionGate>{gate => props.children(props)}</ConnectionGate>;
 }
 
-const mapState = (state, props) => ({});
+const mapState = (state, props) => ({
+  viewer: select.viewer(state),
+});
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   searchConversationsByTerm: term => dispatch(searchConversationsByTerm(term)),
@@ -47,6 +54,9 @@ const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   sendMessage: data => dispatch(sendMessage(data)),
   createConversation: data => dispatch(createConversation(data)),
   clear: () => dispatch(clear()),
+  sendMessage: (data: *) => dispatch(sendMessage(data)),
+  sendMessageForRemoteUsers: (data: *, users: *) =>
+    dispatch(sendMessageForRemoteUsers(data, users)),
 });
 
 export const DispacherManager = connect(
