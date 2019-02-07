@@ -17,7 +17,7 @@ import {
   createSubToAppearanceStatus,
   cancelSubToAppearanceStatus,
 } from './ConnectionManager/messages';
-import { clear, loading } from './store/actions';
+import { clear, loading, unsubscribe } from './store/actions';
 import type { SocketAction, ChatMessage } from './types';
 
 type Props = {
@@ -136,6 +136,23 @@ export class MessengerCore extends React.Component<Props, State> {
     }
   };
 
+  unsubscribeFromChannels = state => {
+    if (state.channels.SubscriptionsChannel) {
+      dispatchSocketMessage(cancelSubToSubscriptionsChannel());
+      this.dispatch(unsubscribe({ channel: 'SubscriptionsChannel' }));
+    }
+
+    if (state.channels.AppearancesChannel) {
+      dispatchSocketMessage(cancelSubToAppearanceStatus());
+      this.dispatch(unsubscribe({ channel: 'AppearancesChannel' }));
+    }
+
+    if (state.channels.UsersChannel) {
+      dispatchSocketMessage(cancelSubToUsersChannel());
+      this.dispatch(unsubscribe({ channel: 'UsersChannel' }));
+    }
+  };
+
   render() {
     const { children, accessToken, socketUrl, ...contextValue } = this.props;
     return (
@@ -153,12 +170,9 @@ export class MessengerCore extends React.Component<Props, State> {
                     this.subscribeToChannels(state);
                   }}
                   willUnmount={() => {
-                    // if (Platform.OS === 'web') {
-                    //   dispatchSocketMessage(
-                    //     cancelSubToSubscriptionsChannel(),
-                    //     cancelSubToUsersChannel(),
-                    //   );
-                    // }
+                    if (Platform.OS === 'web') {
+                      this.unsubscribeFromChannels(state);
+                    }
 
                     onMessage(() => {});
 

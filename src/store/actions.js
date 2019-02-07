@@ -14,6 +14,10 @@ export function loading(data) {
   return { type: 'loading', payload: data };
 }
 
+export function unsubscribe(data) {
+  return { type: 'unsubscribe', identifier: data };
+}
+
 export function setActiveConverstation(conversation_id: string): ClientAction {
   return { type: 'set_active_conversion', conversation_id: conversation_id };
 }

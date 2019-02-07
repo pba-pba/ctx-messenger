@@ -39,6 +39,7 @@ export function reducer(state: State = InitialState, action: Action) {
     }
 
     case 'unsubscribe': {
+      const { identifier } = action;
       return update(state, {
         channels: { $merge: { [identifier.channel]: false } },
       });
