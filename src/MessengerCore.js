@@ -153,12 +153,12 @@ export class MessengerCore extends React.Component<Props, State> {
                     this.subscribeToChannels(state);
                   }}
                   willUnmount={() => {
-                    if (Platform.OS === 'web') {
-                      dispatchSocketMessage(
-                        cancelSubToSubscriptionsChannel(),
-                        cancelSubToUsersChannel(),
-                      );
-                    }
+                    // if (Platform.OS === 'web') {
+                    //   dispatchSocketMessage(
+                    //     cancelSubToSubscriptionsChannel(),
+                    //     cancelSubToUsersChannel(),
+                    //   );
+                    // }
 
                     onMessage(() => {});
 
