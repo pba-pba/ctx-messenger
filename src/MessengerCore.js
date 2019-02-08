@@ -56,6 +56,22 @@ export class MessengerCore extends React.Component<Props, State> {
     this.connect();
   }
 
+  onSocketClose = e => {
+    this.disconnect();
+
+    if (this.props.onSocketClose) {
+      this.props.onSocketClose(e);
+    }
+  };
+
+  onSocketError = e => {
+    this.disconnect();
+
+    if (this.props.onSocketError) {
+      this.props.onSocketError(e);
+    }
+  };
+
   connect = () => {
     const config = this.props.appConfig || 'default';
 
@@ -63,8 +79,8 @@ export class MessengerCore extends React.Component<Props, State> {
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
       dispatch: this.dispatch,
       reconnect: this.reconnect,
-      onSocketClose: this.props.onSocketClose,
-      onSocketError: this.props.onSocketError,
+      onSocketClose: this.onSocketClose,
+      onSocketError: this.onSocketError,
     });
   };
 
@@ -84,9 +100,16 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   disconnect = () => {
-    dispatchSocketMessage(cancelSubToAppearanceStatus());
-    this.dispatch(clear());
-    this.connectionManager.close();
+    const { ws } = this.connectionManager.connection;
+
+    switch (ws.readyState) {
+      case ws.OPEN:
+        this.unsubscribeFromChannels(store.getState());
+        this.dispatch(clear());
+        this.connectionManager.close();
+        break;
+      default:
+    }
   };
 
   componentDidMount() {
@@ -177,9 +200,7 @@ export class MessengerCore extends React.Component<Props, State> {
                     onMessage(() => {});
 
                     if (this.props.closeOnUnmount) {
-                      dispatchSocketMessage(cancelSubToAppearanceStatus());
-                      this.dispatch(clear());
-                      this.connectionManager.close();
+                      this.disconnect();
                     }
                   }}
                 />

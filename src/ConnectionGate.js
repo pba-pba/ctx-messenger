@@ -17,14 +17,8 @@ type Props = {
 type State = {};
 
 class Renderer extends React.Component<Props & CP, State> {
-  getRenderProps = () => ({
-    connected: this.props.connected,
-    viewer: this.props.viewer,
-    channels: this.props.channels,
-  });
-
   render() {
-    return this.props.connected ? this.props.children(this.getRenderProps()) : null;
+    return this.props.connected ? this.props.children(this.props) : null;
   }
 }
 
