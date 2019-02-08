@@ -41,6 +41,9 @@ export class ListRenderer extends React.Component<Props> {
       case 'text':
         return item.last_message.body || 'Attached Files';
       case 'call_start':
+        if (item.last_message.user.id === this.props.viewer.id) {
+          return 'You called';
+        }
         return 'Called you';
       case 'call_end':
         return 'Call ended';
