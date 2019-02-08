@@ -223,14 +223,28 @@ class Renderer extends React.Component<Props & CP, State> {
   renderSubmitButton = context => {
     const { Loader } = context.components;
     const { colors } = context;
-    const disabled = this.state.submiting || this.state.uploading;
+    const busy = this.state.submiting || this.state.uploading;
+    const disabled =
+      !this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent;
     return (
-      <Touchable onPress={this.sendMessage(context)} onLayout={this.onLayout} disabled={disabled}>
+      <Touchable
+        onPress={this.sendMessage(context)}
+        onLayout={this.onLayout}
+        disabled={busy || disabled}
+      >
         <View style={styles.buttonWrapper}>
-          {disabled ? (
+          {busy ? (
             <Loader />
           ) : (
-            <Text style={[styles.button, { color: colors.brand }]}>Send</Text>
+            <Text
+              style={[
+                styles.button,
+                { color: colors.brand },
+                disabled ? styles.buttonDisabled : undefined,
+              ]}
+            >
+              Send
+            </Text>
           )}
         </View>
       </Touchable>
@@ -346,6 +360,9 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 10,
     fontSize: 17,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   inputMobile: {
     borderRadius: 16,
