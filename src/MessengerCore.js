@@ -187,7 +187,7 @@ export class MessengerCore extends React.Component<Props, State> {
                 <EventBinder
                   didMount={() => {
                     if (this.props.onConnected) {
-                      this.props.onConnected();
+                      this.props.onConnected(true);
                     }
 
                     this.subscribeToChannels(state);
