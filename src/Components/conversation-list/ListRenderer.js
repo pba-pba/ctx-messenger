@@ -32,7 +32,7 @@ export class ListRenderer extends React.Component<Props> {
     return this.props.conversations.filter(conversation => conversation.users.length === 2);
   }
 
-  message = (item: *) => {
+  message = (item: ChatConversationSlim) => {
     if (!item.last_message) {
       return null;
     }
@@ -52,7 +52,7 @@ export class ListRenderer extends React.Component<Props> {
     }
   };
 
-  renderItem = (item: *) => {
+  renderItem = (item: ChatConversationSlim) => {
     const users = item.users.filter(user => user.id !== this.props.viewer.id);
     const names = users.length > 1 ? users.map(user => user.first_name).join(', ') : users[0].name;
     const message = this.message(item);
@@ -74,12 +74,14 @@ export class ListRenderer extends React.Component<Props> {
               </Text>
             ) : null}
           </View>
-          <View>
-            {is_today(item.last_message.timestamp) ? null : (
-              <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>
-            )}
-            <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
-          </View>
+          {item.last_message ? (
+            <View>
+              {is_today(item.last_message.timestamp) ? null : (
+                <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>
+              )}
+              <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
+            </View>
+          ) : null}
         </View>
       </Touchable>
     );
