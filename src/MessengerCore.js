@@ -105,11 +105,12 @@ export class MessengerCore extends React.Component<Props, State> {
     switch (ws.readyState) {
       case ws.OPEN:
         this.unsubscribeFromChannels(store.getState());
-        this.dispatch(clear());
         this.connectionManager.close();
         break;
       default:
     }
+
+    this.dispatch(clear());
   };
 
   componentDidMount() {
