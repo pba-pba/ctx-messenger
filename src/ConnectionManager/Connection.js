@@ -41,13 +41,24 @@ class Connection {
     if (this.config.onSocketError) {
       this.config.onSocketError(evt);
     }
-    switch (evt.readyState) {
-      case evt.CLOSED:
+
+    switch (evt.type) {
+      case 'error':
+        switch (evt.target.readyState) {
+          case evt.target.CONNECTING:
+          case evt.target.OPEN:
+          case evt.target.CLOSING:
+            break;
+          case evt.target.CLOSED:
         this.config.reconnect();
         break;
       default:
-      // console.error('websocket error', evt);
+        }
+        break;
+      default:
     }
+
+      // console.error('websocket error', evt);
   };
 
   _onSocketClose = (evt: Event) => {
@@ -66,7 +77,7 @@ class Connection {
   };
 
   send = (...args: Array<Object>) => {
-    if (this.ws.readyState === WebSocket.OPEN) {
+    if (this.ws.readyState === this.ws.OPEN) {
       args.forEach(message => {
         this.ws.send(serializeMessage(message));
       });
@@ -75,7 +86,7 @@ class Connection {
         .map((message, idx) => `\nMessage ${idx + 1}: ${serializeMessage(message)}`)
         .join('');
 
-      console.error(
+      console.log(
         `Trying to send message on socket not open. Connection status code: ${
           this.ws.readyState
         }. Messages: ${messages}`,

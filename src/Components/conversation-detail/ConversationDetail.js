@@ -54,13 +54,18 @@ class Renderer extends React.Component<Props & CP, State> {
       return;
     }
 
-    if (nextProps.activeConversationId !== this.props.activeConversationId) {
+    if (
+      nextProps.activeConversationId !== this.props.activeConversationId &&
+      this.props.connected
+    ) {
       this.props.unsubscribeFromUpdates();
     }
   }
 
   componentWillUnmount() {
-    this.props.unsubscribeFromUpdates();
+    if (this.props.connected) {
+      this.props.unsubscribeFromUpdates();
+    }
   }
 
   onRequestPreviousMessages = () => {
@@ -107,6 +112,7 @@ const mapState = (state, props) => ({
     conversation_id: props.activeConversationId,
   }),
   viewer: select.viewer(state),
+  connected: select.connected(state),
 });
 
 const mapDispatch = (dispatch: Dispatch<*>, props) => ({
