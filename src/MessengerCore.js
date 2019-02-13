@@ -72,31 +72,42 @@ export class MessengerCore extends React.Component<Props, State> {
     }
   };
 
+  onSocketOpen = e => {
+    if (this.props.onSocketOpen) {
+      this.props.onSocketOpen(e);
+    }
+
+    const { ws } = this.connectionManager.connection;
+
+    switch (ws.readyState) {
+      case ws.OPEN:
+        this.subscribeToChannels(store.getState());
+        break;
+      default:
+    }
+  };
+
   connect = () => {
     const config = this.props.appConfig || 'default';
+    const state = store.getState();
+
+    if (state.connected) {
+      return null;
+    }
+
+    if (this.connectionManager) {
+      this.disconnect();
+      this.connectionManager = null;
+    }
 
     this.connectionManager = new ConnectionManager({
       socketUrl: `${this.props.socketUrl}?token=${this.props.accessToken}&app_config=${config}`,
       dispatch: this.dispatch,
-      reconnect: this.reconnect,
+      reconnect: this.connect,
       onSocketClose: this.onSocketClose,
       onSocketError: this.onSocketError,
+      onSocketOpen: this.onSocketOpen,
     });
-  };
-
-  reconnect = () => {
-    this.connect();
-
-    this.connectionManager.connection.ws.onopen = () => {
-      const { ws } = this.connectionManager.connection;
-
-      switch (ws.readyState) {
-        case ws.OPEN:
-          this.subscribeToChannels(store.getState());
-          break;
-        default:
-      }
-    };
   };
 
   disconnect = () => {

@@ -20,6 +20,7 @@ export class ConnectionManager {
       reconnect: config.reconnect,
       onSocketClose: config.onSocketClose,
       onSocketError: config.onSocketError,
+      onSocketOpen: config.onSocketOpen,
     });
   }
 

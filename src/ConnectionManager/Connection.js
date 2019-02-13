@@ -20,7 +20,8 @@ class Connection {
     this.ws = new WebSocket(config.socketUrl);
     this.ws.onmessage = this._onSocketMessage;
     this.ws.onerror = this._onSocketError;
-    this.ws.onclose = config.onSocketClose;
+    this.ws.onclose = this._onSocketClose;
+    this.ws.onopen = config.onSocketOpen;
   }
 
   _onSocketMessage = (evt: MessageEvent) => {
@@ -49,12 +50,19 @@ class Connection {
     }
   };
 
+  _onSocketClose = (evt: Event) => {
+    if (this.config.onSocketClose) {
+      this.config.onSocketClose(evt);
+    }
+
+    connectionSingleton = null;
+  };
+
   /**
    * Public methods
    */
   close = () => {
     this.ws.close();
-    connectionSingleton = null;
   };
 
   send = (...args: Array<Object>) => {
