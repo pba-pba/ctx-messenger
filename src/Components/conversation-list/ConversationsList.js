@@ -33,7 +33,7 @@ class Renderer extends React.Component<Props> {
     return (
       <MessengerContext.Consumer>
         {context => {
-          const { Loader, ListNoContent } = context.components;
+          const { Loader, ListNoContent, ListSearchNoContent } = context.components;
           return this.props.conversations && this.props.viewer ? (
             this.props.conversations.length ? (
               <ListRenderer
@@ -44,6 +44,8 @@ class Renderer extends React.Component<Props> {
               />
             ) : this.props.loadingConversations ? (
               <Loader />
+            ) : this.props.searchConversationQuery ? (
+              <ListSearchNoContent />
             ) : (
               <ListNoContent />
             )
@@ -57,8 +59,9 @@ class Renderer extends React.Component<Props> {
 }
 
 const mapState = (state, props) => ({
-  loadingConversations: select.loading(state, 'conversations'),
   conversations: select.conversations(state),
+  loadingConversations: select.loading(state, 'conversations'),
+  searchConversationQuery: select.searchConversationQuery(state),
   viewer: select.viewer(state),
 });
 

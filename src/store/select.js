@@ -30,6 +30,10 @@ export const select = {
     return denormalize(state.conversations, [ConversationSchema], state.entities) || [];
   },
 
+  searchConversationQuery: (state: State) => {
+    return state.search_conversation_query;
+  },
+
   conversationSlim: (state: State, params: { conversation_id: string }) => {
     const conversations = select.conversations(state) || [];
     return conversations.find(conv => conv.id === params.conversation_id);

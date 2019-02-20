@@ -43,6 +43,10 @@ function CallEndIcon(props: any) {
   return <Text>`CallEndIcon` component not defined</Text>;
 }
 
+function ListSearchNoContent(props: any) {
+  return <Text>`ListSearchNoContent` component not defined</Text>;
+}
+
 export const MessengerContext = React.createContext({
   colors: {
     brand: '#FC612D',
@@ -50,12 +54,13 @@ export const MessengerContext = React.createContext({
     blackText: '#455A64',
   },
   components: {
-    Input: Input,
-    Loader: Loader,
-    MessagesScrollView: MessagesScrollView,
-    MessagesEndList: MessagesEndList,
-    ListNoContent: ListNoContent,
     Files: FileComponent,
+    Input: Input,
+    ListNoContent: ListNoContent,
+    ListSearchNoContent: ListSearchNoContent,
+    Loader: Loader,
+    MessagesEndList: MessagesEndList,
+    MessagesScrollView: MessagesScrollView,
   },
   icons: {
     AttachmentIcon: AttachmentIcon,

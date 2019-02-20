@@ -23,6 +23,7 @@ const InitialState: State = {
     search_users: false,
   },
   channels: {},
+  search_conversation_query: '',
 };
 
 export function reducer(state: State = InitialState, action: Action) {
@@ -51,7 +52,10 @@ export function reducer(state: State = InitialState, action: Action) {
     }
 
     case 'request_search_conversations': {
-      return update(state, { loading: { $merge: { search_conversations: true } } });
+      return update(state, {
+        loading: { $merge: { search_conversations: true } },
+        search_conversation_query: { $set: action.term },
+      });
     }
 
     case 'request_search_users': {
