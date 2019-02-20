@@ -16,7 +16,12 @@ const InitialState: State = {
   entities: { conversations: {}, users: {}, messages: {}, details: {} },
   usersInSearch: [],
   viewer: undefined,
-  loading: { get_messages: false, conversations: false },
+  loading: {
+    conversations: false,
+    get_messages: false,
+    search_conversations: false,
+    search_users: false,
+  },
   channels: {},
 };
 
@@ -43,6 +48,14 @@ export function reducer(state: State = InitialState, action: Action) {
       return update(state, {
         channels: { $merge: { [identifier.channel]: false } },
       });
+    }
+
+    case 'request_search_conversations': {
+      return update(state, { loading: { $merge: { search_conversations: true } } });
+    }
+
+    case 'request_search_users': {
+      return update(state, { loading: { $merge: { search_users: true } } });
     }
 
     case 'confirm_subscription': {
@@ -81,7 +94,7 @@ export function reducer(state: State = InitialState, action: Action) {
           conversations: { $set: entities.conversations || {} },
           users: { $set: entities.users || {} },
         },
-        loading: { $merge: { conversations: false } },
+        loading: { $merge: { conversations: false, search_conversations: false } },
       });
     }
 
@@ -132,7 +145,10 @@ export function reducer(state: State = InitialState, action: Action) {
     }
 
     case 'search_users': {
-      return update(state, { usersInSearch: { $set: action.result.users } });
+      return update(state, {
+        usersInSearch: { $set: action.result.users },
+        loading: { $merge: { search_users: false } },
+      });
     }
 
     /**

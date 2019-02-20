@@ -63,6 +63,7 @@ const mapState = (state, props) => ({
   draft: select.draft(state),
   searchedUsers: select.searchedUsers(state),
   viewer: select.viewer(state),
+  loading: select.loading(state),
 });
 
 export const UserAutocompleteManager = connect(mapState)(Renderer);

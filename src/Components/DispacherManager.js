@@ -39,6 +39,7 @@ function Renderer(props: Props & CP) {
 
 const mapState = (state, props) => ({
   viewer: select.viewer(state),
+  loading: select.loading(state),
 });
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({

@@ -11,7 +11,11 @@ export const select = {
   },
 
   loading(state: State, key: string): boolean {
-    return state.loading[key];
+    if (key) {
+      return state.loading[key];
+    }
+
+    return state.loading;
   },
 
   draft(state: State) {
