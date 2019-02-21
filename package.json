@@ -1,6 +1,6 @@
 {
   "name": "ctx-messenger",
-  "version": "1.1.40",
+  "version": "1.1.41",
   "description": "",
   "author": "Andreyco",
   "license": "MIT",
@@ -22,6 +22,7 @@
   },
   "peerDependencies": {
     "date-fns": "^1.29.0",
+    "draft-js": "^0.10.5",
     "immutability-helper": "^2.8.1",
     "normalizr": "^3.3.0",
     "react": "^15.0.0 || ^16.0.0",
@@ -65,5 +66,7 @@
   "files": [
     "dist"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "redraft": "^0.10.2"
+  }
 }

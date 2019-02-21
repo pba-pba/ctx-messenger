@@ -81,5 +81,8 @@ export const MessengerContext = React.createContext({
     getAttachment() {
       console.log('get attachment');
     },
+    onPress() {
+      console.log('on press');
+    },
   },
 });

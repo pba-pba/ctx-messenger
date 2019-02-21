@@ -9,6 +9,7 @@ import { Avatar } from './Avatar';
 import type { ChatMessage, ChatUser } from '../types';
 import { MessageAttachments } from './MessageAttachments';
 import { formatDay } from './conversation-list/ListRenderer';
+import { DraftJsRenderer } from './draft-js/DraftJsRenderer';
 
 type Props = {
   message: ChatMessage,
@@ -48,15 +49,15 @@ export class MessageBubble extends React.Component<Props, State> {
       <MessengerContext.Consumer>
         {context => {
           const textStyle = { color: context.colors.blackText, ...styles.messageText };
-          return Platform.OS === 'web' ? (
-            <div
-              style={{
-                wordBreak: 'break-word',
-                ...textStyle,
-              }}
-            >
-              {this.props.message.body}
-            </div>
+          return this.props.message.rich_body ? (
+            <View style={styles.richContent}>
+              <DraftJsRenderer
+                richContent={this.props.message.rich_body}
+                color={context.colors.blackText}
+              />
+            </View>
+          ) : Platform.OS === 'web' ? (
+            <div style={{ wordBreak: 'break-word', ...textStyle }}>{this.props.message.body}</div>
           ) : (
             <Text style={textStyle}>{this.props.message.body}</Text>
           );
@@ -68,9 +69,9 @@ export class MessageBubble extends React.Component<Props, State> {
   renderPushedRight(context) {
     return (
       <React.Fragment>
-        <View style={[styles.row]}>{this.renderUserRow()}</View>
-        <View style={[styles.column, { marginRight: 24 }]}>
-          <View>{this.renderMessage()}</View>
+        <View style={styles.row}>{this.renderUserRow()}</View>
+        <View style={styles.column}>
+          {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
         </View>
       </React.Fragment>
@@ -81,8 +82,8 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <View style={[styles.row, styles.reverseRow]}>{this.renderUserRow()}</View>
-        <View style={[styles.column, { marginLeft: 24, alignItems: 'flex-start' }]}>
-          <View>{this.renderMessage()}</View>
+        <View style={[styles.column, { alignItems: 'flex-start' }]}>
+          {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
         </View>
       </React.Fragment>
@@ -112,14 +113,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 'auto',
-    maxWidth: '80%',
+    maxWidth: '90%',
     width: '100%',
   },
   column: {
     alignItems: 'flex-end',
     marginLeft: 'auto',
     width: '100%',
-    maxWidth: '80%',
+    maxWidth: '90%',
     marginVertical: 5,
   },
   reverseRow: {
@@ -146,4 +147,5 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'right',
   },
+  richContent: { alignItems: 'flex-start' },
 });

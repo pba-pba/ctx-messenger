@@ -22,6 +22,7 @@ export type ChatMessageType = 'sent_message' | 'received_message';
 
 export type ChatMessage = {
   body: string,
+  rich_body: ?string,
   conversation_id: string,
   id: string,
   timestamp: string,

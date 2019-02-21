@@ -50,15 +50,15 @@ class Connection {
           case evt.target.CLOSING:
             break;
           case evt.target.CLOSED:
-        this.config.reconnect();
-        break;
-      default:
+            this.config.reconnect();
+            break;
+          default:
         }
         break;
       default:
     }
 
-      // console.error('websocket error', evt);
+    // console.error('websocket error', evt);
   };
 
   _onSocketClose = (evt: Event) => {
