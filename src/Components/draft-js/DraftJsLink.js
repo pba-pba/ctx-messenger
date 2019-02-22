@@ -53,7 +53,10 @@ export function DraftJsLink(props: Props) {
 
   return Platform.OS === 'web' ? (
     props.entityMap.data.embed_code ? (
-      <div dangerouslySetInnerHTML={{ __html: props.entityMap.data.embed_code }} />
+      <div
+        dangerouslySetInnerHTML={{ __html: props.entityMap.data.embed_code }}
+        style={{ width: '100%' }}
+      />
     ) : null
   ) : (
     <MessengerContext.Consumer>

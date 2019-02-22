@@ -70,7 +70,7 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <View style={styles.row}>{this.renderUserRow()}</View>
-        <View style={styles.column}>
+        <View style={[styles.column, { alignItems: 'flex-end', marginLeft: 'auto' }]}>
           {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
         </View>
@@ -82,7 +82,7 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <View style={[styles.row, styles.reverseRow]}>{this.renderUserRow()}</View>
-        <View style={[styles.column, { alignItems: 'flex-start' }]}>
+        <View style={[styles.column, { alignItems: 'flex-start', marginRight: 'auto' }]}>
           {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
         </View>
@@ -117,8 +117,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   column: {
-    alignItems: 'flex-end',
-    marginLeft: 'auto',
     width: '100%',
     maxWidth: '90%',
     marginVertical: 5,
