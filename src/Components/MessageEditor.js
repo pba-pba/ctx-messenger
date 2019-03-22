@@ -225,7 +225,8 @@ class Renderer extends React.Component<Props & CP, State> {
     const { colors } = context;
     const busy = this.state.submiting || this.state.uploading;
     const disabled =
-      !this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent;
+      !this.props.activeConversationId ||
+      (!this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent);
     return (
       <Touchable
         onPress={this.sendMessage(context)}
