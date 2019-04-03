@@ -224,8 +224,10 @@ class Renderer extends React.Component<Props & CP, State> {
     const { Loader } = context.components;
     const { colors } = context;
     const busy = this.state.submiting || this.state.uploading;
+    const isRecipient =
+      this.props.activeConversationId || (this.props.draft && this.props.draft.users.length);
     const disabled =
-      !this.props.activeConversationId ||
+      !isRecipient ||
       (!this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent);
     return (
       <Touchable
@@ -315,7 +317,9 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 }
 
-const mapState = state => ({});
+const mapState = state => ({
+  draft: select.draft(state),
+});
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps: Props) => ({
   sendMessage: (data: *) => {
