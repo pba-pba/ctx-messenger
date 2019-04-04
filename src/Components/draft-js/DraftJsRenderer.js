@@ -2,8 +2,6 @@
 
 import React from 'react';
 import redraft from 'redraft';
-import convertFromDraftStateToRaw from 'draft-js/lib/convertFromDraftStateToRaw';
-import convertFromRawToDraftState from 'draft-js/lib/convertFromRawToDraftState';
 
 import { DraftJsLink } from './DraftJsLink';
 import { renderers } from './renderers';
@@ -20,12 +18,8 @@ export class DraftJsRenderer extends React.Component<Props, State> {
     return JSON.parse(this.props.richContent);
   }
 
-  get contentState() {
-    return convertFromRawToDraftState(this.richContent);
-  }
-
   renderContent() {
-    return redraft(convertFromDraftStateToRaw(this.contentState), renderers(this.props.color));
+    return redraft(this.richContent, renderers(this.props.color));
   }
 
   renderLink() {
