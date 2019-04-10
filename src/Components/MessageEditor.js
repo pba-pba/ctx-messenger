@@ -63,8 +63,8 @@ class Renderer extends React.Component<Props & CP, State> {
 
   whiteboardManagerMobile = null;
 
-  get isValid() {
-    return this.state.message || this.state.attachments.length;
+  get isRecipient() {
+    return this.props.activeConversationId || (this.props.draft && this.props.draft.users.length);
   }
 
   sendMessage(context) {
@@ -224,11 +224,8 @@ class Renderer extends React.Component<Props & CP, State> {
     const { Loader } = context.components;
     const { colors } = context;
     const busy = this.state.submiting || this.state.uploading;
-    const isRecipient =
-      this.props.activeConversationId || (this.props.draft && this.props.draft.users.length);
     const disabled =
-      !isRecipient ||
-      (!this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent);
+      !this.state.attachments.length && !this.state.message && !this.state.hasWhiteboardContent;
     return (
       <Touchable
         onPress={this.sendMessage(context)}
@@ -278,7 +275,7 @@ class Renderer extends React.Component<Props & CP, State> {
           const { WhiteboardIcon } = context.icons;
           const { functions, colors } = context;
 
-          return (
+          return this.isRecipient ? (
             <View style={styles.container}>
               {this.renderAttachments(context)}
               <View style={styles.inputContainer}>
@@ -310,7 +307,7 @@ class Renderer extends React.Component<Props & CP, State> {
                 {this.renderSubmitButton(context)}
               </View>
             </View>
-          );
+          ) : null;
         }}
       </MessengerContext.Consumer>
     );
