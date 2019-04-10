@@ -167,8 +167,19 @@ class Renderer extends React.Component<Props & CP, State> {
   }
 
   renderAttachmentPickerWeb(context) {
-    const AttachmentIcon = context.icons.AttachmentIcon;
-    return (
+    const { AttachmentMenu } = context.components;
+    return AttachmentMenu ? (
+      <AttachmentMenu
+        onChange={this.openAttachmentPicker(context.functions.openAttachmentPicker)}
+        onUpload={isUploading => {
+          this.setState({ uploading: isUploading });
+        }}
+        active={this.state.attachments.length}
+        hiddenText
+        position="top"
+        positionOffset={39}
+      />
+    ) : (
       <div>
         <input
           multiple
