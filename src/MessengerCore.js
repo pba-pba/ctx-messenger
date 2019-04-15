@@ -77,6 +77,10 @@ export class MessengerCore extends React.Component<Props, State> {
       this.props.onSocketOpen(e);
     }
 
+    if (!this.connectionManager) {
+      return;
+    }
+
     const { ws } = this.connectionManager.connection;
 
     switch (ws.readyState) {
@@ -111,6 +115,10 @@ export class MessengerCore extends React.Component<Props, State> {
   };
 
   disconnect = () => {
+    if (!this.connectionManager) {
+      return;
+    }
+
     const { ws } = this.connectionManager.connection;
 
     switch (ws.readyState) {
