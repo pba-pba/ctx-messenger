@@ -9,6 +9,7 @@ import { ConnectionGate } from '../ConnectionGate';
 import {
   clear,
   createConversation,
+  globalSearchByTerm,
   searchConversationsByTerm,
   searchConversationsByUsers,
   searchUsersByTerm,
@@ -21,6 +22,7 @@ import type { ChatUser } from '../types';
 
 type CP = {
   clear(): mixed,
+  globalSearchByTerm(term: string): mixed,
   searchConversationsByTerm(term: string): mixed,
   searchConversationsByUsers(users: *): mixed,
   searchUsersByTerm(term: string): mixed,
@@ -44,6 +46,7 @@ const mapState = (state, props) => ({
 
 const mapDispatch = (dispatch: Dispatch<*>, ownProps) => ({
   searchConversationsByTerm: term => dispatch(searchConversationsByTerm(term)),
+  globalSearchByTerm: term => dispatch(globalSearchByTerm(term)),
   searchUsersByTerm: term => dispatch(searchUsersByTerm(term)),
   searchConversationsByUsers: users => dispatch(searchConversationsByUsers(users)),
   setDraft: draft => {

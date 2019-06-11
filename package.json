@@ -1,6 +1,6 @@
 {
   "name": "ctx-messenger",
-  "version": "1.1.48",
+  "version": "1.1.49",
   "description": "",
   "author": "Andreyco",
   "license": "MIT",
@@ -66,6 +66,7 @@
     "dist"
   ],
   "dependencies": {
+    "deepmerge": "^3.2.0",
     "redraft": "^0.10.2"
   }
 }

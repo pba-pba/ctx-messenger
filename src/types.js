@@ -63,6 +63,7 @@ export type State = {
   activeConversationId: void | string,
   connected: boolean,
   conversations: void | Array<ChatConversationSlim>,
+  users: void | ChatUser[],
   draft: void | Object,
   entities: { conversations: {}, users: {}, details: {} },
   usersInSearch: ChatUser[],

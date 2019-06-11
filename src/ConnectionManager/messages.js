@@ -145,6 +145,17 @@ export function searchConversationsByTerm(term: string) {
   };
 }
 
+export function globalSearchByTerm(term: string) {
+  return {
+    command: 'message',
+    identifier: { channel: 'SubscriptionsChannel' },
+    data: {
+      action: 'global_search',
+      payload: { term: term },
+    },
+  };
+}
+
 export function searchConversationsByUsers(users: string) {
   return {
     command: 'message',

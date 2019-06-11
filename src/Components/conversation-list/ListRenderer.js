@@ -12,6 +12,8 @@ type Props = {|
   activeConversationId: void | string,
   conversations: ChatConversationSlim[],
   onRequestConversationDetail(string): mixed,
+  onUserPress(user: ChatUser): mixed,
+  users: ChatUser[],
   viewer: ChatUser,
 |};
 
@@ -30,6 +32,10 @@ export class ListRenderer extends React.Component<Props> {
 
   get direct() {
     return this.props.conversations.filter(conversation => conversation.users.length === 2);
+  }
+
+  get users() {
+    return this.props.users;
   }
 
   message = (item: ChatConversationSlim) => {
@@ -87,18 +93,45 @@ export class ListRenderer extends React.Component<Props> {
     );
   };
 
+  renderUser = (user: ChatUser) => {
+    return (
+      <Touchable key={user.id} onPress={() => this.props.onUserPress(user)}>
+        <View style={styles.row}>
+          <View style={styles.avatar}>
+            <Avatar users={[user]} size={40} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.names}>{user.name}</Text>
+          </View>
+          <View>
+            <Text style={styles.time}>No History</Text>
+          </View>
+        </View>
+      </Touchable>
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
-        {this.direct.length ? (
+        {this.direct.length || this.users.length ? (
           <React.Fragment>
             <Text style={styles.text}>DIRECT MESSAGES</Text>
-            <View style={styles.shadowByPlatform}>{this.direct.map(this.renderItem)}</View>
+
+            {this.direct.length ? (
+              <View style={styles.shadowByPlatform}>{this.direct.map(this.renderItem)}</View>
+            ) : null}
+
+            {this.users.length ? (
+              <View style={styles.shadowByPlatform}>{this.users.map(this.renderUser)}</View>
+            ) : null}
           </React.Fragment>
         ) : null}
+
         {this.groups.length ? (
           <React.Fragment>
             <Text style={styles.text}>GROUP MESSAGES</Text>
+
             <View style={styles.shadowByPlatform}>{this.groups.map(this.renderItem)}</View>
           </React.Fragment>
         ) : null}

@@ -2,8 +2,11 @@
 
 import { normalize } from 'normalizr';
 import update from 'immutability-helper';
-import { ConversationSchema, DetailSchema } from './schemas';
+import deepmerge from 'deepmerge';
+
+import { ConversationSchema, DetailSchema, GlobalSearchSchema } from './schemas';
 import { select } from './select';
+
 import type { Action } from './actions';
 import type { State } from '../types';
 
@@ -12,6 +15,7 @@ const InitialState: State = {
   activeConversationId: undefined,
   connected: false,
   conversations: undefined,
+  users: undefined,
   draft: undefined,
   entities: { conversations: {}, users: {}, messages: {}, details: {} },
   usersInSearch: [],
@@ -25,6 +29,12 @@ const InitialState: State = {
   channels: {},
   search_conversation_query: '',
 };
+
+const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray;
+
+function getIds(array) {
+  return (array || []).map(item => item.id);
+}
 
 export function reducer(state: State = InitialState, action: Action) {
   switch (action.type) {
@@ -79,24 +89,27 @@ export function reducer(state: State = InitialState, action: Action) {
     }
 
     case 'merge_conversations': {
-      const { result, entities } = normalize(action.result.conversations, [ConversationSchema]);
+      const normalizedData = normalize(action.result, GlobalSearchSchema);
+
       return update(state, {
-        conversations: (slice = []) => Array.from(new Set([...result, ...slice])),
+        conversations: (slice = []) =>
+          Array.from(new Set([...getIds(action.result.conversations), ...slice])),
+        users: (slice = []) => Array.from(new Set([...getIds(action.result.users)])),
         entities: {
-          conversations: { $merge: entities.conversations || {} },
-          users: { $merge: entities.users || {} },
+          $set: deepmerge(state.entities, normalizedData.entities, { arrayMerge: overwriteMerge }),
         },
         loading: { $merge: { conversations: false } },
       });
     }
 
     case 'replace_conversations': {
-      const { result, entities } = normalize(action.result.conversations, [ConversationSchema]);
+      const normalizedData = normalize(action.result, GlobalSearchSchema);
+
       return update(state, {
-        conversations: { $set: result },
+        conversations: { $set: getIds(action.result.conversations) },
+        users: { $set: getIds(action.result.users) },
         entities: {
-          conversations: { $set: entities.conversations || {} },
-          users: { $set: entities.users || {} },
+          $set: deepmerge(state.entities, normalizedData.entities, { arrayMerge: overwriteMerge }),
         },
         loading: { $merge: { conversations: false, search_conversations: false } },
       });
@@ -109,12 +122,11 @@ export function reducer(state: State = InitialState, action: Action) {
       const detail = select.conversationDetail(state, {
         conversation_id: action.result.conversation_id,
       });
-
       const mutation = action.result.cursor ? '$push' : '$set';
       const partialResult = update(detail || {}, {
         messages: { [mutation]: action.result.messages },
       });
-      const { entities } = normalize(
+      const normalizedData = normalize(
         {
           ...action.result,
           messages: partialResult.messages,
@@ -122,8 +134,11 @@ export function reducer(state: State = InitialState, action: Action) {
         },
         DetailSchema,
       );
+
       return update(state, {
-        entities: { $merge: entities },
+        entities: {
+          $set: deepmerge(state.entities, normalizedData.entities, { arrayMerge: overwriteMerge }),
+        },
         loading: { $merge: { get_messages: false } },
       });
     }
@@ -134,8 +149,13 @@ export function reducer(state: State = InitialState, action: Action) {
       });
       // $FlowFixMe
       detail.messages = action.result.messages.concat(detail.messages);
-      const { entities } = normalize(detail, DetailSchema);
-      return update(state, { entities: { $merge: entities } });
+      const normalizedData = normalize(detail, DetailSchema);
+
+      return update(state, {
+        entities: {
+          $set: deepmerge(state.entities, normalizedData.entities, { arrayMerge: overwriteMerge }),
+        },
+      });
     }
 
     /**

@@ -59,6 +59,12 @@ export const socketMessageDispatcher = (store: *) => (next: *) => (action: Actio
       return next(action);
     }
 
+    // Global search
+    case 'request_global_search': {
+      dispatchSocketMessage(ws.globalSearchByTerm(action.term));
+      return next(action);
+    }
+
     case 'request_search_conversations_by_users': {
       dispatchSocketMessage(ws.searchConversationsByUsers(action.users));
       return next(action);

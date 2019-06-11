@@ -1,7 +1,7 @@
 // @flow
 
 import { denormalize } from 'normalizr';
-import { ConversationSchema, DetailSchema } from './schemas';
+import { ConversationSchema, DetailSchema, UserSchema } from './schemas';
 import { type State } from './reducer';
 import { type ConversationState } from '../types';
 
@@ -28,6 +28,10 @@ export const select = {
 
   conversations: (state: State) => {
     return denormalize(state.conversations, [ConversationSchema], state.entities) || [];
+  },
+
+  users: (state: State) => {
+    return denormalize(state.users, [UserSchema], state.entities) || [];
   },
 
   searchConversationQuery: (state: State) => {
