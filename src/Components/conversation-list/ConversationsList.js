@@ -48,7 +48,7 @@ class Renderer extends React.Component<Props> {
           const { Loader, ListNoContent, ListSearchNoContent } = context.components;
 
           return this.props.viewer ? (
-            this.conversations.length ? (
+            this.conversations.length || this.users.length ? (
               <ListRenderer
                 activeConversationId={this.props.activeConversationId}
                 conversations={this.conversations}
