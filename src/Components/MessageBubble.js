@@ -23,7 +23,7 @@ export class MessageBubble extends React.Component<Props, State> {
     return (
       <MessengerContext.Consumer>
         {context => (
-          <React.Fragment>
+          <View style={styles.userRow}>
             <View style={{ flexDirection: 'row' }}>
               {is_today(this.props.message.timestamp) ? null : (
                 <Text style={[styles.time, { marginRight: 3 }]}>
@@ -33,12 +33,12 @@ export class MessageBubble extends React.Component<Props, State> {
               <Text style={styles.time}>{format(this.props.message.timestamp, 'h:mm A')}</Text>
             </View>
 
-            <Text style={[styles.name, { color: context.colors.blackText }]}>
+            <Text style={[styles.name, { color: context.colors.blackText }]} numberOfLines={1}>
               {this.props.message.user.name}
             </Text>
 
             <Avatar users={[this.props.message.user]} size={24} />
-          </React.Fragment>
+          </View>
         )}
       </MessengerContext.Consumer>
     );
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     marginHorizontal: 10,
+    flex: 1,
   },
   timestamp: {
     fontSize: 11,
@@ -146,4 +147,5 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   richContent: { alignItems: 'flex-start' },
+  userRow: { flexDirection: 'row', alignItems: 'center', maxWidth: '100%' },
 });
