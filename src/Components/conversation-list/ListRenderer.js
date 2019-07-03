@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 import { View, Text, Touchable, StyleSheet, Platform } from 'react-primitives';
-import { Avatar } from '../Avatar';
-import type { ChatUser, ChatConversationSlim } from '../../types';
 import format from 'date-fns/format';
 import is_today from 'date-fns/is_today';
 import is_yesterday from 'date-fns/is_yesterday';
+
+import { Avatar } from '../Avatar';
+
+import type { ChatUser, ChatConversationSlim } from '../../types';
 
 type Props = {|
   activeConversationId: void | string,
@@ -26,12 +28,8 @@ export function formatDay(time: string) {
 }
 
 export class ListRenderer extends React.Component<Props> {
-  get groups() {
-    return this.props.conversations.filter(conversation => conversation.users.length > 2);
-  }
-
-  get direct() {
-    return this.props.conversations.filter(conversation => conversation.users.length === 2);
+  get conversations() {
+    return this.props.conversations.filter(conversation => conversation.users.length >= 2);
   }
 
   get users() {
@@ -114,26 +112,16 @@ export class ListRenderer extends React.Component<Props> {
   render() {
     return (
       <React.Fragment>
-        {this.direct.length || this.users.length ? (
+        {this.conversations.length ? (
           <React.Fragment>
-            <Text style={styles.text}>DIRECT MESSAGES</Text>
+            <Text style={styles.text}>DIRECT AND GROUP MESSAGES</Text>
 
-            {this.direct.length ? (
-              <View style={styles.shadowByPlatform}>{this.direct.map(this.renderItem)}</View>
-            ) : null}
-
-            {this.users.length ? (
-              <View style={styles.shadowByPlatform}>{this.users.map(this.renderUser)}</View>
-            ) : null}
+            <View style={styles.shadowByPlatform}>{this.conversations.map(this.renderItem)}</View>
           </React.Fragment>
         ) : null}
 
-        {this.groups.length ? (
-          <React.Fragment>
-            <Text style={styles.text}>GROUP MESSAGES</Text>
-
-            <View style={styles.shadowByPlatform}>{this.groups.map(this.renderItem)}</View>
-          </React.Fragment>
+        {this.users.length ? (
+          <View style={styles.shadowByPlatform}>{this.users.map(this.renderUser)}</View>
         ) : null}
       </React.Fragment>
     );
