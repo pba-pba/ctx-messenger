@@ -7,6 +7,7 @@ import is_today from 'date-fns/is_today';
 import is_yesterday from 'date-fns/is_yesterday';
 
 import { Avatar } from '../Avatar';
+import { MessengerContext } from '../../MessengerContext';
 
 import type { ChatUser, ChatConversationSlim } from '../../types';
 
@@ -62,32 +63,46 @@ export class ListRenderer extends React.Component<Props> {
     const message = this.message(item);
 
     return (
-      <Touchable key={item.id} onPress={() => this.props.onRequestConversationDetail(item.id)}>
-        <View style={item.id === this.props.activeConversationId ? styles.rowActive : styles.row}>
-          <View style={styles.avatar}>
-            <Avatar users={users} size={40} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.names}>{names}</Text>
-            {message ? (
-              <Text
-                style={[styles.lastMessage, !item.read ? styles.unreadLastMessage : undefined]}
-                numberOfLines={1}
-              >
-                {message}
-              </Text>
-            ) : null}
-          </View>
-          {item.last_message ? (
-            <View>
-              {is_today(item.last_message.timestamp) ? null : (
-                <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>
-              )}
-              <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
+      <MessengerContext.Consumer>
+        {context => (
+          <Touchable key={item.id} onPress={() => this.props.onRequestConversationDetail(item.id)}>
+            <View
+              style={item.id === this.props.activeConversationId ? styles.rowActive : styles.row}
+            >
+              <View style={styles.avatar}>
+                <Avatar users={users} size={40} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.names}>{names}</Text>
+                {message ? (
+                  <Text
+                    style={[styles.lastMessage, item.read ? undefined : styles.unreadLastMessage]}
+                    numberOfLines={1}
+                  >
+                    {message}
+                  </Text>
+                ) : null}
+              </View>
+              {item.last_message ? (
+                <View>
+                  {is_today(item.last_message.timestamp) ? null : (
+                    <Text style={styles.time}>{formatDay(item.last_message.timestamp)}</Text>
+                  )}
+                  <Text style={styles.time}>{format(item.last_message.timestamp, 'h:mm A')}</Text>
+                </View>
+              ) : null}
+              <View
+                style={[
+                  styles.dot,
+                  item.read
+                    ? { backgroundColor: '#B0BEC5', opacity: 0.2 }
+                    : { backgroundColor: context.colors.brand },
+                ]}
+              />
             </View>
-          ) : null}
-        </View>
-      </Touchable>
+          </Touchable>
+        )}
+      </MessengerContext.Consumer>
     );
   };
 
@@ -187,4 +202,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingTop: 20,
   },
+  dot: { width: 10, height: 10, borderRadius: 5, marginLeft: 10 },
 });
