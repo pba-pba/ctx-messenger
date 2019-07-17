@@ -19,11 +19,11 @@ type Props = {
 type State = {};
 
 export class MessageBubble extends React.Component<Props, State> {
-  renderUserRow = () => {
+  renderUserRow = style => {
     return (
       <MessengerContext.Consumer>
         {context => (
-          <View style={styles.userRow}>
+          <View style={[styles.userRow, style]}>
             <View style={{ flexDirection: 'row' }}>
               {is_today(this.props.message.timestamp) ? null : (
                 <Text style={[styles.time, { marginRight: 3 }]}>
@@ -69,7 +69,7 @@ export class MessageBubble extends React.Component<Props, State> {
   renderPushedRight(context) {
     return (
       <React.Fragment>
-        <View style={styles.row}>{this.renderUserRow()}</View>
+        {this.renderUserRow()}
         <View style={[styles.column, { alignItems: 'flex-end', marginLeft: 'auto' }]}>
           {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
@@ -81,7 +81,7 @@ export class MessageBubble extends React.Component<Props, State> {
   renderPushedLeft(context) {
     return (
       <React.Fragment>
-        <View style={[styles.row, styles.reverseRow]}>{this.renderUserRow()}</View>
+        {this.renderUserRow(styles.reverseRow)}
         <View style={[styles.column, { alignItems: 'flex-start', marginRight: 'auto' }]}>
           {this.renderMessage()}
           <MessageAttachments context={context} attachments={this.props.message.attachments} />
@@ -108,13 +108,11 @@ export class MessageBubble extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
+  userRow: {
     alignItems: 'center',
-    marginLeft: 'auto',
-    maxWidth: '90%',
-    width: '100%',
+    maxWidth: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   column: {
     width: '100%',
@@ -123,14 +121,11 @@ const styles = StyleSheet.create({
   },
   reverseRow: {
     flexDirection: 'row-reverse',
-    marginRight: 'auto',
-    marginLeft: 0,
   },
   name: {
     fontSize: 13,
     fontWeight: '600',
     marginHorizontal: 10,
-    flex: 1,
   },
   timestamp: {
     fontSize: 11,
@@ -147,5 +142,4 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   richContent: { alignItems: 'flex-start' },
-  userRow: { flexDirection: 'row', alignItems: 'center', maxWidth: '100%' },
 });
