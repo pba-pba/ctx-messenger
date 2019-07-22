@@ -50,7 +50,12 @@ export class MessageBubble extends React.Component<Props, State> {
         {context => {
           const textStyle = { color: context.colors.blackText, ...styles.messageText };
           return this.props.message.rich_body ? (
-            <View style={styles.richContent}>
+            <View
+              style={[
+                styles.richContent,
+                Platform.OS === 'web' ? { wordBreak: 'break-word' } : undefined,
+              ]}
+            >
               <DraftJsRenderer
                 richContent={this.props.message.rich_body}
                 color={context.colors.blackText}
