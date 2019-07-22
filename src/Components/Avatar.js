@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 import { View, StyleSheet, Image } from 'react-primitives';
+
 import type { ChatUser } from '../types';
 
 type Props = {
-  users: ChatUser[],
+  borderColor?: string,
   size: number,
+  users: ChatUser[],
 };
 
 type State = {};
@@ -57,7 +59,7 @@ export class Avatar extends React.Component<Props, State> {
   }
 
   render() {
-    const { size } = this.props;
+    const { size, borderColor } = this.props;
     return (
       <View style={{ width: size, height: size }}>
         <View
@@ -67,6 +69,8 @@ export class Avatar extends React.Component<Props, State> {
               width: size,
               height: size,
               borderRadius: size / 2,
+              borderWidth: borderColor ? StyleSheet.hairlineWidth : undefined,
+              borderColor: borderColor,
             },
           ]}
         >

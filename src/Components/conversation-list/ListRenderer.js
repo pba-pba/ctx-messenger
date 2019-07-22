@@ -63,17 +63,23 @@ export class ListRenderer extends React.Component<Props> {
     const message = this.message(item);
 
     return (
-      <MessengerContext.Consumer>
+      <MessengerContext.Consumer key={item.id}>
         {context => (
-          <Touchable key={item.id} onPress={() => this.props.onRequestConversationDetail(item.id)}>
+          <Touchable onPress={() => this.props.onRequestConversationDetail(item.id)}>
             <View
               style={item.id === this.props.activeConversationId ? styles.rowActive : styles.row}
             >
               <View style={styles.avatar}>
-                <Avatar users={users} size={40} />
+                <Avatar
+                  users={users}
+                  size={40}
+                  borderColor={item.read ? undefined : context.colors.brand}
+                />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.names}>{names}</Text>
+                <Text style={[styles.names, item.read ? undefined : styles.unreadNames]}>
+                  {names}
+                </Text>
                 {message ? (
                   <Text
                     style={[styles.lastMessage, item.read ? undefined : styles.unreadLastMessage]}
@@ -94,9 +100,7 @@ export class ListRenderer extends React.Component<Props> {
               <View
                 style={[
                   styles.dot,
-                  item.read
-                    ? { backgroundColor: '#B0BEC5', opacity: 0.2 }
-                    : { backgroundColor: context.colors.brand },
+                  item.read ? styles.readDot : { backgroundColor: context.colors.brand },
                 ]}
               />
             </View>
@@ -161,13 +165,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#455A64',
   },
+  unreadNames: {
+    fontWeight: '600',
+    color: '#232628',
+  },
   lastMessage: {
     fontSize: 14,
     color: '#90A4AE',
+    marginTop: 3,
   },
   unreadLastMessage: {
-    fontWeight: 'bold',
-    color: '#455A64',
+    fontWeight: '500',
+    color: '#232628',
   },
   avatar: {
     marginRight: 10,
@@ -203,4 +212,5 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   dot: { width: 10, height: 10, borderRadius: 5, marginLeft: 10 },
+  readDot: { backgroundColor: '#B0BEC5', opacity: 0.2 },
 });
