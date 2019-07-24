@@ -69,7 +69,7 @@ export class Avatar extends React.Component<Props, State> {
               width: size,
               height: size,
               borderRadius: size / 2,
-              borderWidth: borderColor ? StyleSheet.hairlineWidth : undefined,
+              borderWidth: borderColor ? 2 : undefined,
               borderColor: borderColor,
             },
           ]}
