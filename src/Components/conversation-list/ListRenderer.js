@@ -57,7 +57,7 @@ export class ListRenderer extends React.Component<Props> {
     }
   };
 
-  renderItem = (item: ChatConversationSlim) => {
+  renderItem = (item: ChatConversationSlim, index: number) => {
     const users = item.users.filter(user => user.id !== this.props.viewer.id);
     const names = users.length > 1 ? users.map(user => user.first_name).join(', ') : users[0].name;
     const message = this.message(item);
@@ -65,7 +65,10 @@ export class ListRenderer extends React.Component<Props> {
     return (
       <MessengerContext.Consumer key={item.id}>
         {context => (
-          <Touchable onPress={() => this.props.onRequestConversationDetail(item.id)}>
+          <Touchable
+            onPress={() => this.props.onRequestConversationDetail(item.id)}
+            testID={`conversation-${index}`}
+          >
             <View
               style={item.id === this.props.activeConversationId ? styles.rowActive : styles.row}
             >
