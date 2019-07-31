@@ -242,6 +242,7 @@ class Renderer extends React.Component<Props & CP, State> {
         onPress={this.sendMessage(context)}
         onLayout={this.onLayout}
         disabled={busy || disabled}
+        testID="new-message-send-button"
       >
         <View style={styles.buttonWrapper}>
           {busy ? (
